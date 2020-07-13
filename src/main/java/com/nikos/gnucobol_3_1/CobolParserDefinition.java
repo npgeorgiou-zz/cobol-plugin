@@ -54,7 +54,6 @@ public class CobolParserDefinition implements ParserDefinition {
             CobolTypes.REDEFINES,
             CobolTypes.RENAMES,
             CobolTypes.THROUGH,
-            CobolTypes.THRU,
             CobolTypes.PIC_TYPE_ALPHA,
             CobolTypes.PIC_TYPE_ALPHANUMERIC,
             CobolTypes.PIC_TYPE_NUMERIC,

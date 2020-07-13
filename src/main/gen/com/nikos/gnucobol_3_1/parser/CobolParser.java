@@ -378,7 +378,7 @@ public class CobolParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // '88' item_name_decl_ VALUE list_of_literals
+  // '88' item_name_decl_ VALUE (literal_ THROUGH literal_ | list_of_literals)
   public static boolean conditional_item_decl_(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "conditional_item_decl_")) return false;
     boolean r;
@@ -386,8 +386,31 @@ public class CobolParser implements PsiParser, LightPsiParser {
     r = consumeToken(b, "88");
     r = r && item_name_decl_(b, l + 1);
     r = r && consumeToken(b, VALUE);
-    r = r && list_of_literals(b, l + 1);
+    r = r && conditional_item_decl__3(b, l + 1);
     exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // literal_ THROUGH literal_ | list_of_literals
+  private static boolean conditional_item_decl__3(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "conditional_item_decl__3")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = conditional_item_decl__3_0(b, l + 1);
+    if (!r) r = list_of_literals(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // literal_ THROUGH literal_
+  private static boolean conditional_item_decl__3_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "conditional_item_decl__3_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = literal_(b, l + 1);
+    r = r && consumeToken(b, THROUGH);
+    r = r && literal_(b, l + 1);
+    exit_section_(b, m, null, r);
     return r;
   }
 
@@ -1803,7 +1826,7 @@ public class CobolParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // '66' item_name_decl_ RENAMES item_usage_ [THROUGH|THRU] item_usage_
+  // '66' item_name_decl_ RENAMES item_usage_ [THROUGH] item_usage_
   public static boolean renames_item_decl_(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "renames_item_decl_")) return false;
     boolean r;
@@ -1818,20 +1841,11 @@ public class CobolParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // [THROUGH|THRU]
+  // [THROUGH]
   private static boolean renames_item_decl__4(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "renames_item_decl__4")) return false;
-    renames_item_decl__4_0(b, l + 1);
+    consumeToken(b, THROUGH);
     return true;
-  }
-
-  // THROUGH|THRU
-  private static boolean renames_item_decl__4_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "renames_item_decl__4_0")) return false;
-    boolean r;
-    r = consumeToken(b, THROUGH);
-    if (!r) r = consumeToken(b, THRU);
-    return r;
   }
 
   /* ********************************************************** */

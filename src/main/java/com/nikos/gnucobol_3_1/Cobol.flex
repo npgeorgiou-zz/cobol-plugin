@@ -134,7 +134,7 @@ IDENTIFIER = ([:jletterdigit:])+ (- | [:jletterdigit:])* ([:jletterdigit:])+
     "redefines"               {return CobolTypes.REDEFINES;}
     "renames"                 {return CobolTypes.RENAMES;}
     "through"                 {return CobolTypes.THROUGH;}
-    "thru"                    {return CobolTypes.THRU;}
+    "thru"                    {return CobolTypes.THROUGH;}
 
     {IDENTIFIER}              {return CobolTypes.IDENTIFIER;}
 }

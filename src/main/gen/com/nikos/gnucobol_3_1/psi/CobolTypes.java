@@ -131,7 +131,6 @@ public interface CobolTypes {
   IElementType SUBTRACT = new CobolTokenType("SUBTRACT");
   IElementType SUBTRACT_OP = new CobolTokenType("SUBTRACT_OP");
   IElementType THROUGH = new CobolTokenType("THROUGH");
-  IElementType THRU = new CobolTokenType("THRU");
   IElementType TIME = new CobolTokenType("TIME");
   IElementType TO = new CobolTokenType("TO");
   IElementType TRUE = new CobolTokenType("TRUE");
