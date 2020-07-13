@@ -258,6 +258,6 @@ private list_of_items_or_literals ::=  <<list item_or_literal_>>
 private list_of_items_or_numbers ::=  <<list item_or_number_literal_>>
 private list_of_literals ::=  <<list literal_>>
 private list_of_items ::=  <<list item>>
-private meta list ::= <<item>>? ([COMMA] <<item>>)*
+private meta list ::= <<item>> ([COMMA] <<item>>)*
 
 private not_dot ::= !DOT

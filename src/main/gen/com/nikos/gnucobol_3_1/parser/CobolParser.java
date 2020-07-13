@@ -1171,22 +1171,15 @@ public class CobolParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // <<item>>? ([COMMA] <<item>>)*
+  // <<item>> ([COMMA] <<item>>)*
   static boolean list(PsiBuilder b, int l, Parser _item) {
     if (!recursion_guard_(b, l, "list")) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = list_0(b, l + 1, _item);
+    r = _item.parse(b, l);
     r = r && list_1(b, l + 1, _item);
     exit_section_(b, m, null, r);
     return r;
-  }
-
-  // <<item>>?
-  private static boolean list_0(PsiBuilder b, int l, Parser _item) {
-    if (!recursion_guard_(b, l, "list_0")) return false;
-    _item.parse(b, l);
-    return true;
   }
 
   // ([COMMA] <<item>>)*

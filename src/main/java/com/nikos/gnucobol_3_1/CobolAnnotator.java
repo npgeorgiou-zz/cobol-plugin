@@ -88,6 +88,15 @@ public class CobolAnnotator implements Annotator {
             return;
         }
 
+        if (element instanceof CobolDisplay_) {
+            CobolDisplay_ display = (CobolDisplay_) element;
+
+            conditionalOperands(display.getItemUsage_List(), holder);
+
+            return;
+        }
+
+
         if (element instanceof CobolAdd_) {
             CobolAdd_ add = (CobolAdd_) element;
 
@@ -270,7 +279,7 @@ public class CobolAnnotator implements Annotator {
         }
     }
 
-    private void notNumericItems(Collection<CobolItemUsage_> itemUsages , AnnotationHolder holder) {
+    private void notNumericItems(Collection<CobolItemUsage_> itemUsages, AnnotationHolder holder) {
         for (CobolItemUsage_ usage : itemUsages) {
             PsiElement reference = usage.getReference().resolve();
             if (reference == null) continue;
@@ -295,6 +304,21 @@ public class CobolAnnotator implements Annotator {
     private void undefinedItem(CobolItemUsage_ itemUsage, AnnotationHolder holder) {
         if (itemUsage.getReference().resolve() == null) {
             error(itemUsage, "Undefined item.", holder);
+        }
+    }
+
+    private void conditionalOperands(Collection<CobolItemUsage_> itemUsages, AnnotationHolder holder) {
+        for (CobolItemUsage_ usage : itemUsages) {
+            PsiElement reference = usage.getReference().resolve();
+            if (reference == null) continue;
+
+            if (PsiTreeUtil.prevVisibleLeaf(usage).getNode().getElementType() == CobolTypes.OF) {
+                continue;
+            }
+
+            if (reference.getParent() instanceof CobolConditionalItemDecl_) {
+                error(usage, "Conditional item not allowed here.", holder);
+            }
         }
     }
 
