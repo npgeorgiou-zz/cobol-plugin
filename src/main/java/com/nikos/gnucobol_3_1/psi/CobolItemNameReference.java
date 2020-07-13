@@ -22,13 +22,13 @@ public class CobolItemNameReference extends PsiReferenceBase<PsiElement> impleme
 
     @Override
     public @Nullable PsiElement resolve() {
-        Collection<CobolItemDecl_> vars = PsiTreeUtil.getParentOfType(getElement(), CobolProgram_.class).items();
+        Collection<CobolItemDecl_> items = PsiTreeUtil.getParentOfType(getElement(), CobolProgram_.class).items();
 
-        vars = vars.stream()
-                .filter(declaration -> declaration.name().equals(myElement.getText()))
+        items = items.stream()
+                .filter(it -> it.name().equals(myElement.getText()))
                 .collect(Collectors.toList());
 
-        if (vars.isEmpty()) {
+        if (items.isEmpty()) {
             return null;
         }
 
@@ -36,11 +36,11 @@ public class CobolItemNameReference extends PsiReferenceBase<PsiElement> impleme
         // In that case, the Annotator annotates them as an error, but we also don't want to use any
         // of them as a reference resolve target, as in that case that one will be NOT marked as unused.
         // It will just be weird visually that lets say, all 3 are marked as error "duplicate name" and 2 also marked as unused.
-        if (vars.stream().count() > 1) {
+        if (items.stream().count() > 1) {
             return null;
         }
 
-        CobolItemDecl_ itemDecl = vars.stream().findFirst().get();
+        CobolItemDecl_ itemDecl = items.stream().findFirst().get();
 
         if (itemDecl instanceof CobolElementaryItemDecl_) {
             return((CobolElementaryItemDecl_) itemDecl).getItemNameDecl_();
@@ -50,7 +50,15 @@ public class CobolItemNameReference extends PsiReferenceBase<PsiElement> impleme
             return((CobolGroupItemDecl_) itemDecl).getItemNameDecl_();
         }
 
-        // Cant happen, element is one of these 2 interfaces.
+        if (itemDecl instanceof CobolRenamesItemDecl_) {
+            return((CobolRenamesItemDecl_) itemDecl).getItemNameDecl_();
+        }
+
+        if (itemDecl instanceof CobolConditionalItemDecl_) {
+            return((CobolConditionalItemDecl_) itemDecl).getItemNameDecl_();
+        }
+
+        // Cant happen, element is one of these 4 interfaces.
         return null;
     }
 

@@ -2,7 +2,8 @@ package com.nikos.gnucobol_3_1.psi;
 
 import com.intellij.psi.tree.IElementType;
 import com.nikos.gnucobol_3_1.CobolLanguage;
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 
 public class CobolTokenType extends IElementType {
     public CobolTokenType(@NotNull @NonNls String debugName) {

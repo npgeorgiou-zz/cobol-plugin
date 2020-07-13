@@ -1,14 +1,14 @@
 package com.nikos.gnucobol_3_1.psi;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.*;
-import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFileFactory;
+import com.intellij.psi.PsiParserFacade;
 import com.nikos.gnucobol_3_1.CobolFileType;
 import com.nikos.gnucobol_3_1.CobolUtil;
 import com.nikos.gnucobol_3_1.Util;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.stream.Collectors;
 
 public class CobolElementFactory {

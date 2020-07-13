@@ -15,6 +15,10 @@ public class Util {
         return string;
     }
 
+    public static boolean isQuoted(String string) {
+        return !Util.unquote(string).equals(string);
+    }
+
     public static String startOverflow(String string, int length) {
         return string.substring(0, string.length() - length);
     }

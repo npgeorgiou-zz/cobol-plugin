@@ -9,7 +9,6 @@ import com.intellij.util.PlatformIcons;
 import com.intellij.util.ProcessingContext;
 import com.nikos.gnucobol_3_1.CobolUtil;
 import com.nikos.gnucobol_3_1.Util;
-import com.nikos.gnucobol_3_1.psi.CobolItemDecl_;
 import com.nikos.gnucobol_3_1.psi.CobolTypes;
 import org.jetbrains.annotations.NotNull;
 

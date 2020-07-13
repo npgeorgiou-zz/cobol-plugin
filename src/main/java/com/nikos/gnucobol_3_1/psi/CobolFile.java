@@ -4,7 +4,9 @@ import com.google.common.collect.Lists;
 import com.intellij.extapi.psi.PsiFileBase;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.psi.FileViewProvider;
-import com.nikos.gnucobol_3_1.*;
+import com.nikos.gnucobol_3_1.CobolFileType;
+import com.nikos.gnucobol_3_1.CobolLanguage;
+import com.nikos.gnucobol_3_1.CobolUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;

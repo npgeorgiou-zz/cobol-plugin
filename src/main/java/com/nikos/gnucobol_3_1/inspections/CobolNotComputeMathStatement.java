@@ -10,7 +10,10 @@ import com.nikos.gnucobol_3_1.CobolUtil;
 import com.nikos.gnucobol_3_1.psi.*;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class CobolNotComputeMathStatement extends CobolInspectionBase {
 

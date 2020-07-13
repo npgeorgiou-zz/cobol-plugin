@@ -1,7 +1,8 @@
 package com.nikos.gnucobol_3_1.colors;
 
 import com.intellij.lexer.Lexer;
-import com.intellij.openapi.editor.*;
+import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
+import com.intellij.openapi.editor.HighlighterColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
 import com.intellij.psi.TokenType;
@@ -29,7 +30,8 @@ public class CobolSyntaxHighlighter extends SyntaxHighlighterBase {
 
     public static final TextAttributesKey IDENTIFIER_STYLE = createTextAttributesKey("COBOL_IDENTIFIER", DefaultLanguageHighlighterColors.IDENTIFIER);
     public static final TextAttributesKey KEYWORD_STYLE = createTextAttributesKey("COBOL_KEYWORD", DefaultLanguageHighlighterColors.KEYWORD);
-    public static final TextAttributesKey CONCEPTUAL_DATA_ITEMS_STYLE = createTextAttributesKey("COBOL_CONSEPTUAL_DATA_ITEMS", DefaultLanguageHighlighterColors.CONSTANT);
+    public static final TextAttributesKey CONCEPTUAL_DATA_ITEMS_STYLE = createTextAttributesKey("COBOL_CONCEPTUAL_DATA_ITEMS", DefaultLanguageHighlighterColors.CONSTANT);
+    public static final TextAttributesKey FIGURATIVE_CONSTANTS_STYLE = createTextAttributesKey("COBOL_FIGURATIVE_CONSTANTS", DefaultLanguageHighlighterColors.CONSTANT);
     public static final TextAttributesKey PROGRAM_CALL_STYLE = createTextAttributesKey("COBOL_PROGRAM_CALL", DefaultLanguageHighlighterColors.FUNCTION_CALL);
     public static final TextAttributesKey PROGRAM_DECLARATION_STYLE = createTextAttributesKey("COBOL_PROGRAM_DECLARATION", DefaultLanguageHighlighterColors.FUNCTION_DECLARATION);
     public static final TextAttributesKey PROGRAM_END_STYLE = createTextAttributesKey("COBOL_PROGRAM_END", DefaultLanguageHighlighterColors.FUNCTION_DECLARATION);
@@ -44,7 +46,8 @@ public class CobolSyntaxHighlighter extends SyntaxHighlighterBase {
         fillMap(ATTRIBUTES, CobolParserDefinition.DIVISION_SECTION_HEADERS, SECTION_HEADER_STYLE);
         fillMap(ATTRIBUTES, CobolParserDefinition.KEYWORDS, KEYWORD_STYLE);
         fillMap(ATTRIBUTES, CobolParserDefinition.NUMBER_LITERALS, NUMBER_STYLE);
-        fillMap(ATTRIBUTES, CobolParserDefinition.CONSEPTUAL_DATA_ITEMS, CONCEPTUAL_DATA_ITEMS_STYLE);
+        fillMap(ATTRIBUTES, CobolParserDefinition.CONCEPTUAL_DATA_ITEMS, CONCEPTUAL_DATA_ITEMS_STYLE);
+        fillMap(ATTRIBUTES, CobolParserDefinition.FIGURATIVE_CONSTANTS, FIGURATIVE_CONSTANTS_STYLE);
 
         fillMap(ATTRIBUTES, STRING_STYLE, CobolTypes.STRING);
         fillMap(ATTRIBUTES, COMMENT_STYLE, CobolParserDefinition.COMMENT);

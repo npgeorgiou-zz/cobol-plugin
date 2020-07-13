@@ -1,26 +1,24 @@
 package com.nikos.gnucobol_3_1.completion;
 
-import com.intellij.codeInsight.completion.*;
-import com.intellij.codeInsight.lookup.LookupElementBuilder;
-import com.intellij.openapi.project.Project;
-import com.intellij.patterns.*;
+import com.intellij.codeInsight.completion.CompletionContributor;
+import com.intellij.codeInsight.completion.CompletionType;
+import com.intellij.patterns.ElementPattern;
+import com.intellij.patterns.PatternCondition;
+import com.intellij.patterns.PsiElementPattern;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.ProcessingContext;
 import com.nikos.gnucobol_3_1.CobolUtil;
-import com.nikos.gnucobol_3_1.Util;
 import com.nikos.gnucobol_3_1.psi.*;
 import org.jetbrains.annotations.NotNull;
 
-import static com.intellij.patterns.PlatformPatterns.psiElement;
-
 import java.util.*;
-import java.util.concurrent.Callable;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static com.intellij.patterns.PlatformPatterns.psiElement;
 
 public class CobolCompletionContributor extends CompletionContributor {
     private class Node {
@@ -210,7 +208,7 @@ public class CobolCompletionContributor extends CompletionContributor {
             new RepeatingNode(
                 listOfItems(),
                 null,
-                new ProgramItems(),
+                new NonConditionalProgramItems(),
                 new Node(
                     psiElement(CobolTypes.REPLACING), new Keywords("replacing"),
                     new RepeatingBranchRootNode(
@@ -219,12 +217,12 @@ public class CobolCompletionContributor extends CompletionContributor {
                             psiElement(CobolTypes.BY), new Keywords("by"),
                             new Node(
                                 listOfItemsOrLiterals(),
-                                new ProgramItems()))))));
+                                new NonConditionalProgramItems()))))));
 
         Node acceptStatement = new RootNode(CobolAccept_.class,
             psiElement(CobolTypes.ACCEPT),
             new Node(
-                item(), new ProgramItems(),
+                item(), new NonConditionalProgramItems(),
                 new Node(
                     psiElement(CobolTypes.FROM), new Keywords("from"),
                     new Node(
@@ -248,7 +246,7 @@ public class CobolCompletionContributor extends CompletionContributor {
             new RepeatingNode(
                 listOfItemsOrLiterals(),
                 null,
-                new ProgramItems()));
+                new NonConditionalProgramItems()));
 
         Node moveStatement = new RootNode(CobolMove_.class,
             psiElement(CobolTypes.MOVE),
@@ -261,11 +259,11 @@ public class CobolCompletionContributor extends CompletionContributor {
                         new Node(
                             itemOrLiteral(), new GroupItems())))),
             new Node(
-                itemOrLiteral(), new ProgramItems(),
+                itemOrLiteral(), new NonConditionalProgramItems(),
                 new Node(
                     psiElement(CobolTypes.TO), new Keywords("to"),
                     new RepeatingNode(
-                        any(CobolTypes.IDENTIFIER, CobolTypes.OF, CobolTypes.COMMA), null, new ProgramItems()))));
+                        any(CobolTypes.IDENTIFIER, CobolTypes.OF, CobolTypes.COMMA), null, new NonConditionalProgramItems()))));
 
         Node addStatement = new RootNode(CobolAdd_.class,
             psiElement(CobolTypes.ADD),
@@ -380,13 +378,13 @@ public class CobolCompletionContributor extends CompletionContributor {
             new RepeatingNode(
                 listOfItems(),
                 null,
-                new ProgramItems(),
+                new NonConditionalProgramItems(),
                 new Node(
                     psiElement(CobolTypes.EQUALS_OP), new Keywords("="),
                     new RepeatingNode(
                         mathExpression(),
                         null,
-                        new ProgramItems()))));
+                        new NonConditionalProgramItems()))));
 
         extendFor(acceptStatement);
         extendFor(displayStatement);
@@ -688,10 +686,10 @@ class AfterPatterns extends PatternCondition<PsiElement> {
             return false;
         }
 
-        CobolStatement_ statementOfTyped = PsiTreeUtil.getParentOfType(currentElement, CobolStatement_.class);
+        PsiElement statementOfTyped = boundaryForMatching(currentElement);
 
         while ((currentElement = PsiTreeUtil.prevVisibleLeaf(currentElement)) != null) {
-            CobolStatement_ statementOfLeaf = PsiTreeUtil.getParentOfType(currentElement, CobolStatement_.class);
+            PsiElement statementOfLeaf = boundaryForMatching(currentElement);
             if (statementOfLeaf == null || !statementOfLeaf.equals(statementOfTyped)) {
                 break;
             }
@@ -715,5 +713,10 @@ class AfterPatterns extends PatternCondition<PsiElement> {
         }
 
         return indexOfCurrentPattern == 0;
+    }
+
+    public PsiElement boundaryForMatching(PsiElement element) {
+        CobolStatement_ statement = PsiTreeUtil.getParentOfType(element, CobolStatement_.class);
+        return statement;
     }
 }

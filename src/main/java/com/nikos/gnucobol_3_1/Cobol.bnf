@@ -17,7 +17,7 @@
 
 {
   tokens = [
-    SPACE = "regexp:\s+"
+    WHITESPACE = "regexp:\s+"
     COMMENT='regexp:\*>.*'
     INTEGER = "regexp:[\+\-]?[0-9]+"
     FLOAT = "regexp:[\+\-]?[0-9]+\.[0-9]+"
@@ -44,8 +44,6 @@
     MULTIPLY_OP = '*'
     DIVIDE_OP = '/'
 
-    PIC = 'pic'
-    PICTURE = 'picture'
     ACCEPT = 'accept'
     FROM = 'from'
     DATE = 'date'
@@ -79,10 +77,17 @@
     TO = 'to'
     END = 'end'
     CALL = 'call'
-    VALUE = 'value'
     IS = 'is'
     PROGRAM = 'program'
     COPY = 'copy'
+
+    PIC = 'pic'
+    PICTURE = 'picture'
+    VALUE = 'value'
+    REDEFINES = 'redefines'
+    RENAMES = 'renames'
+    THROUGH = 'through'
+    THRU = 'thru'
 
     PIC_TYPE_ALPHABETIC = 'a'
     PIC_TYPE_ALPHANUMERIC = 'x'
@@ -146,35 +151,40 @@ data_division_ ::= DATA_DIVISION DOT
                linkage_section_?
 
 ws_section_ ::= WORKING_STORAGE_SECTION DOT
-                  (item_decl_)*
+                  (item_decl_ DOT)*
                 {pin=1 recoverWhile=not_wd_section_end}
 private not_wd_section_end ::= !(ls_section_|linkage_section_|procedure_division_)
 
 ls_section_ ::= LOCAL_STORAGE_SECTION DOT
-                  (item_decl_)*
+                  (item_decl_ DOT)*
                 {pin=1 recoverWhile=not_ls_section_end}
 private not_ls_section_end ::= !(linkage_section_|procedure_division_)
 
 linkage_section_ ::= LINKAGE_SECTION DOT
-                       (item_decl_)*
+                       (item_decl_ DOT)*
                      {pin=1 recoverWhile=not_linkage_section_end}
 private not_linkage_section_end ::= !(procedure_division_)
 
-item_decl_ ::= (group_item_decl_|elementary_item_decl_ ) {methods=[level name parent]}
+item_decl_ ::= (elementary_item_decl_ | renames_item_decl_ | conditional_item_decl_ | group_item_decl_) {recoverWhile=not_dot methods=[level name parent]}
 
-group_item_decl_ ::= item_level_decl_ item_name_decl_ DOT                              {extends="item_decl_" methods=[children]}
-elementary_item_decl_ ::= item_level_decl_ item_name_decl_ item_type_decl_ [item_value_decl_] DOT  {extends="item_decl_" methods=[type isSigned hasDecimals length decimalLength initialValue]}
+group_item_decl_ ::= item_level_decl_ item_name_decl_ {extends="item_decl_" methods=[children]}
+elementary_item_decl_ ::= item_level_decl_ item_name_decl_ (normal_| redefines_)
+                                                           {extends="item_decl_" methods=[redefines type isSigned hasDecimals length decimalLength initialValue]}
+renames_item_decl_ ::=  '66' item_name_decl_ RENAMES item_usage_ [THROUGH|THRU] item_usage_ {extends="item_decl_"}
+conditional_item_decl_ ::=  '88' item_name_decl_ VALUE list_of_items_or_literals {extends="item_decl_"}
+
+private normal_ ::= item_type_decl_ [item_value_decl_]
+private redefines_ ::=  REDEFINES item_usage_ item_type_decl_
 
 private item_level_decl_::= INTEGER
-item_type_decl_::= (PIC|PICTURE) [IS] (
-               PIC_TYPE_ALPHA item_length_decl_ |
-               PIC_TYPE_ALPHANUMERIC item_length_decl_ |
-               PIC_TYPE_NUMERIC item_length_decl_ [PIC_TYPE_DECIMAL_NUMERIC item_length_decl_] |
-               PIC_TYPE_SIGNED_NUMERIC item_length_decl_ [PIC_TYPE_DECIMAL_NUMERIC item_length_decl_]
-             ) {pin=1}
-
+item_type_decl_ ::= (PIC|PICTURE) [IS] (
+                                         PIC_TYPE_ALPHA item_length_decl_ |
+                                         PIC_TYPE_ALPHANUMERIC item_length_decl_ |
+                                         PIC_TYPE_NUMERIC item_length_decl_ [PIC_TYPE_DECIMAL_NUMERIC item_length_decl_] |
+                                         PIC_TYPE_SIGNED_NUMERIC item_length_decl_ [PIC_TYPE_DECIMAL_NUMERIC item_length_decl_]
+                                       ) {pin=1}
 item_length_decl_ ::= PAREN_OPEN INTEGER PAREN_CLOSE
-item_value_decl_::= VALUE [IS] literal_ {pin=1}
+item_value_decl_::= VALUE [IS] (literal_|null_) {pin=1}
 
 
 procedure_division_ ::= PROCEDURE_DIVISION [using_] DOT
@@ -228,10 +238,21 @@ item_usage_ ::= IDENTIFIER {methods=[setName getReference typedGroupItem parentC
 identifier_or_string_ ::= (IDENTIFIER|STRING)
 private item_or_number_literal_ ::= (item|number_literal_)
 private item_or_literal_ ::= (item|literal_)
-private literal_ ::= (STRING|number_literal_)
-private number_literal_ ::= (INTEGER|FLOAT)
+literal_ ::= (string_literal_|number_literal_) {methods=[isAlphabetic isAlphaNumeric isNumeric isInteger isFloat isFigurativeConstant isAll]}
+private string_literal_ ::= (STRING|FLOAT|zero_|space_|low_value_|high_value_|quote_|all_)
+private number_literal_ ::= (INTEGER|FLOAT|zero_|all_)
+
+private quote_ ::= (quote|quotes)
+private high_value_ ::= (high-value|high-values)
+private low_value_ ::= (low-value|low-values)
+private space_ ::= (space|spaces)
+private zero_ ::= (zero|zeros|zeroes)
+private null_ ::= (null|nulls)
+private all_ ::= all (null_|zero_|space_|low_value_|high_value_|quote_|STRING|INTEGER|FLOAT)
 
 private list_of_items_or_literals ::=  <<list item_or_literal_>>
 private list_of_items_or_numbers ::=  <<list item_or_number_literal_>>
 private list_of_items ::=  <<list item>>
 private meta list ::= <<item>>? ([COMMA] <<item>>)*
+
+private not_dot ::= !DOT

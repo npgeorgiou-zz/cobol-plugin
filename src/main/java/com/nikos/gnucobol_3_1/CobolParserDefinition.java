@@ -1,12 +1,21 @@
 package com.nikos.gnucobol_3_1;
 
-import com.intellij.lang.*;
+import com.intellij.lang.ASTNode;
+import com.intellij.lang.ParserDefinition;
+import com.intellij.lang.PsiParser;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.*;
-import com.intellij.psi.tree.*;
+import com.intellij.psi.FileViewProvider;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.TokenType;
+import com.intellij.psi.tree.IElementType;
+import com.intellij.psi.tree.IFileElementType;
+import com.intellij.psi.tree.TokenSet;
 import com.nikos.gnucobol_3_1.parser.CobolParser;
-import com.nikos.gnucobol_3_1.psi.*;
+import com.nikos.gnucobol_3_1.psi.CobolFile;
+import com.nikos.gnucobol_3_1.psi.CobolTokenType;
+import com.nikos.gnucobol_3_1.psi.CobolTypes;
 import org.jetbrains.annotations.NotNull;
 
 public class CobolParserDefinition implements ParserDefinition {
@@ -41,6 +50,11 @@ public class CobolParserDefinition implements ParserDefinition {
 
     public static final TokenSet KEYWORDS = TokenSet.create(
             CobolTypes.PIC,
+            CobolTypes.VALUE,
+            CobolTypes.REDEFINES,
+            CobolTypes.RENAMES,
+            CobolTypes.THROUGH,
+            CobolTypes.THRU,
             CobolTypes.PIC_TYPE_ALPHA,
             CobolTypes.PIC_TYPE_ALPHANUMERIC,
             CobolTypes.PIC_TYPE_NUMERIC,
@@ -72,14 +86,13 @@ public class CobolParserDefinition implements ParserDefinition {
             CobolTypes.CORRESPONDING,
             CobolTypes.TO,
             CobolTypes.END,
-            CobolTypes.VALUE,
             CobolTypes.PROGRAM,
             CobolTypes.COPY,
             CobolTypes.CALL,
             CobolTypes.USING
     );
 
-    public static final TokenSet CONSEPTUAL_DATA_ITEMS = TokenSet.create(
+    public static final TokenSet CONCEPTUAL_DATA_ITEMS = TokenSet.create(
             CobolTypes.DATE,
             CobolTypes.YYYYMMDD,
             CobolTypes.DAY,
@@ -87,6 +100,23 @@ public class CobolParserDefinition implements ParserDefinition {
             CobolTypes.DAY_OF_WEEK,
             CobolTypes.TIME
     );
+
+    public static final TokenSet FIGURATIVE_CONSTANTS = TokenSet.create(
+        CobolTypes.ZERO,
+        CobolTypes.ZERO,
+        CobolTypes.ZERO,
+        CobolTypes.SPACE,
+        CobolTypes.SPACE,
+        CobolTypes.HIGH_VALUE,
+        CobolTypes.HIGH_VALUE,
+        CobolTypes.LOW_VALUE,
+        CobolTypes.LOW_VALUE,
+        CobolTypes.QUOTE,
+        CobolTypes.QUOTE,
+        CobolTypes.NULL,
+        CobolTypes.NULL,
+        CobolTypes.ALL
+        );
 
     public static final IFileElementType FILE = new IFileElementType(CobolLanguage.INSTANCE);
 

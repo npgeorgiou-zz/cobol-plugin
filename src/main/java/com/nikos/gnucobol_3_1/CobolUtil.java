@@ -6,13 +6,16 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
-import com.intellij.psi.PsiWhiteSpace;
-import com.intellij.psi.search.*;
+import com.intellij.psi.search.FileTypeIndex;
+import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.nikos.gnucobol_3_1.psi.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class CobolUtil {
@@ -170,5 +173,90 @@ public class CobolUtil {
         }
 
         parent.getNode().removeChild(toReplace.getNode());
+    }
+
+    public static <T extends PsiElement> T previousSibling(
+        T element,
+        Predicate<PsiElement> stopCondition,
+        Predicate<PsiElement> foundCondition
+    ) {
+        PsiElement prev = element;
+
+        while ((prev = prev.getPrevSibling()) != null) {
+            if (stopCondition != null && stopCondition.test(prev)) break;
+
+            if (foundCondition.test(prev)) return (T) prev;
+        }
+
+        return null;
+    }
+
+    public static <T extends PsiElement> T nextSibling(
+        T element,
+        Predicate<PsiElement> stopCondition,
+        Predicate<PsiElement> foundCondition
+    ) {
+        PsiElement next = element;
+
+        while ((next = next.getNextSibling()) != null) {
+            if (stopCondition != null && stopCondition.test(next)) break;
+
+            if (foundCondition.test(next)) return (T) next;
+        }
+
+        return null;
+    }
+
+    public static boolean isAlphabetic(PsiElement element) {
+        IElementType type = element.getNode().getElementType();
+
+        if (type == CobolTypes.NULL || type == CobolTypes.SPACE || type == CobolTypes.HIGH_VALUE || type == CobolTypes.LOW_VALUE)
+            return true;
+        if (type == CobolTypes.QUOTE || type == CobolTypes.ZERO) return false;
+
+        // If not, check for content.
+        return Util.unquote(element.getText()).matches("^[a-zA-Z ]*$");
+    }
+
+    public static boolean isAlphaNumeric(PsiElement element) {
+        IElementType type = element.getNode().getElementType();
+
+        if (
+            type == CobolTypes.NULL
+                || type == CobolTypes.SPACE
+                || type == CobolTypes.HIGH_VALUE
+                || type == CobolTypes.LOW_VALUE
+                || type == CobolTypes.QUOTE
+                || type == CobolTypes.ZERO
+        ) return true;
+
+        return Util.isQuoted(element.getText());
+    }
+
+    public static boolean isInteger(PsiElement element) {
+        IElementType type = element.getNode().getElementType();
+
+        if (type == CobolTypes.NULL || type == CobolTypes.ZERO) return true;
+
+        return !isAlphaNumeric(element) && !element.getText().contains(".");
+    }
+
+    public static boolean isFloat(PsiElement element) {
+        IElementType type = element.getNode().getElementType();
+        if (type == CobolTypes.NULL || type == CobolTypes.ZERO) return true;
+
+        return !isAlphaNumeric(element) && element.getText().contains(".");
+    }
+
+    public static boolean isFigurativeConstant(PsiElement element) {
+        IElementType type = element.getNode().getElementType();
+
+        return type == CobolTypes.NULL
+            || type == CobolTypes.SPACE
+            || type == CobolTypes.HIGH_VALUE
+            || type == CobolTypes.LOW_VALUE
+            || type == CobolTypes.QUOTE
+            || type == CobolTypes.ALL
+            || type == CobolTypes.ZERO;
     }
 }

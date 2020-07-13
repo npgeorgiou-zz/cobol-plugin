@@ -1,15 +1,22 @@
 package com.nikos.gnucobol_3_1;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.folding.*;
-import com.intellij.openapi.editor.*;
-import com.intellij.openapi.project.*;
-import com.intellij.psi.*;
+import com.intellij.lang.folding.FoldingBuilderEx;
+import com.intellij.lang.folding.FoldingDescriptor;
+import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.project.DumbAware;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.nikos.gnucobol_3_1.psi.CobolFile;
-import org.jetbrains.annotations.*;
-import java.util.*;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class CobolFoldingBuilder extends FoldingBuilderEx implements DumbAware {
 

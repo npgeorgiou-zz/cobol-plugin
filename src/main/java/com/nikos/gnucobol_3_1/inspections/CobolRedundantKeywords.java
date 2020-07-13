@@ -5,7 +5,8 @@ import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.nikos.gnucobol_3_1.psi.*;
+import com.nikos.gnucobol_3_1.psi.CobolFile;
+import com.nikos.gnucobol_3_1.psi.CobolTypes;
 
 import java.util.Collection;
 import java.util.stream.Collectors;

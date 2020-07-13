@@ -72,6 +72,21 @@ IDENTIFIER = ([:jletterdigit:])+ (- | [:jletterdigit:])* ([:jletterdigit:])+
     "linkage section"         {return CobolTypes.LINKAGE_SECTION;}
     "procedure division"      {return CobolTypes.PROCEDURE_DIVISION;}
 
+    "zero"                    {return CobolTypes.ZERO;}
+    "zeros"                   {return CobolTypes.ZERO;}
+    "zeroes"                  {return CobolTypes.ZERO;}
+    "space"                   {return CobolTypes.SPACE;}
+    "spaces"                  {return CobolTypes.SPACE;}
+    "high-value"              {return CobolTypes.HIGH_VALUE;}
+    "high-values"             {return CobolTypes.HIGH_VALUE;}
+    "low-value"               {return CobolTypes.LOW_VALUE;}
+    "low-values"              {return CobolTypes.LOW_VALUE;}
+    "quote"                   {return CobolTypes.QUOTE;}
+    "quotes"                  {return CobolTypes.QUOTE;}
+    "null"                    {return CobolTypes.NULL;}
+    "nulls"                   {return CobolTypes.NULL;}
+    "all"                     {return CobolTypes.ALL;}
+
     "accept"                  {return CobolTypes.ACCEPT;}
     "from"                    {return CobolTypes.FROM;}
     "date"                    {return CobolTypes.DATE;}
@@ -107,11 +122,17 @@ IDENTIFIER = ([:jletterdigit:])+ (- | [:jletterdigit:])* ([:jletterdigit:])+
     "to"                      {return CobolTypes.TO;}
     "end"                     {return CobolTypes.END;}
     "call"                    {return CobolTypes.CALL;}
-    "value"                   {return CobolTypes.VALUE;}
     "program"                 {return CobolTypes.PROGRAM;}
     "copy"                    {return CobolTypes.COPY;}
+
     "pic"                     {yybegin(ITEM_TYPE); return CobolTypes.PIC;}
     "picture"                 {yybegin(ITEM_TYPE); return CobolTypes.PIC;}
+    "value"                   {return CobolTypes.VALUE;}
+    "values"                  {return CobolTypes.VALUE;}
+    "redefines"               {return CobolTypes.REDEFINES;}
+    "renames"                 {return CobolTypes.RENAMES;}
+    "through"                 {return CobolTypes.THROUGH;}
+    "thru"                    {return CobolTypes.THRU;}
 
     {IDENTIFIER}              {return CobolTypes.IDENTIFIER;}
 }

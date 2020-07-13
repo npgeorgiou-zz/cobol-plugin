@@ -29,6 +29,7 @@ public class PopupDialogAction extends AnAction {
             dlgMsg.append(String.format("\nSelected Element: %s", nav.toString()));
         }
         Messages.showMessageDialog(currentProject, dlgMsg.toString(), dlgTitle, Messages.getInformationIcon());
+
     }
 
 }

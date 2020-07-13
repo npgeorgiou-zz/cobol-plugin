@@ -1,6 +1,6 @@
 <idea-plugin>
     <id>org.nikos.gnucobol_3_1</id>
-    <name>Plugin display name here</name>
+    <name>GnuCobol 3.1</name>
     <vendor email="support@yourcompany.com" url="http://www.yourcompany.com">YourCompany</vendor>
 
     <description><![CDATA[
@@ -42,6 +42,12 @@
         <localInspection language="Cobol" shortName="CobolUnusedItem" displayName="Unused variable" groupName="Cobol"
                          enabledByDefault="true" level="WARNING" implementationClass="com.nikos.gnucobol_3_1.inspections.CobolUnusedItem"/>
 
+        <localInspection language="Cobol" shortName="CobolRedefines" displayName="Redefining items" groupName="Cobol"
+                         enabledByDefault="true" level="WARNING" implementationClass="com.nikos.gnucobol_3_1.inspections.CobolRedefines"/>
+
+        <localInspection language="Cobol" shortName="CobolRenames" displayName="Renaming items" groupName="Cobol"
+                         enabledByDefault="true" level="WARNING" implementationClass="com.nikos.gnucobol_3_1.inspections.CobolRenames"/>
+
         <localInspection language="Cobol" shortName="CobolRedundantKeywords" displayName="Redundant keywords" groupName="Cobol"
                          enabledByDefault="true" level="INFO" implementationClass="com.nikos.gnucobol_3_1.inspections.CobolRedundantKeywords"/>
 
@@ -50,7 +56,6 @@
 
         <localInspection language="Cobol" shortName="CobolListsWithoutCommas" displayName="Lists without commas" groupName="Cobol"
                          enabledByDefault="true" level="INFO" implementationClass="com.nikos.gnucobol_3_1.inspections.CobolListsWithoutCommas"/>
-
 
     </extensions>
 

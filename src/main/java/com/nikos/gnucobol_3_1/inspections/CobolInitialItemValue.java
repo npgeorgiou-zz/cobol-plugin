@@ -3,10 +3,11 @@ package com.nikos.gnucobol_3_1.inspections;
 import com.intellij.codeInspection.LocalInspectionToolSession;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
+import com.intellij.psi.PsiElement;
 import com.nikos.gnucobol_3_1.CobolUtil;
 import com.nikos.gnucobol_3_1.Util;
-import com.nikos.gnucobol_3_1.psi.CobolTypes;
 import com.nikos.gnucobol_3_1.psi.CobolElementaryItemDecl_;
+import com.nikos.gnucobol_3_1.psi.CobolLiteral_;
 import com.nikos.gnucobol_3_1.psi.CobolVisitor;
 import com.sun.istack.NotNull;
 
@@ -24,50 +25,49 @@ public class CobolInitialItemValue extends CobolInspectionBase {
     }
 
     private void typeMismatch(CobolElementaryItemDecl_ declaration, ProblemsHolder holder) {
-        String value = declaration.initialValue();
+        PsiElement value = declaration.initialValue();
 
-        if (value == null) {
-            return;
-        }
+        if (!(value instanceof CobolLiteral_)) return;
+        CobolLiteral_ literal = (CobolLiteral_) value;
 
         boolean definedAsAlpha = declaration.type().equals(CobolUtil.ALPHA);
         boolean definedAsAlphaNumeric = declaration.type().equals(CobolUtil.ALPHANUMERIC);
         boolean definedAsDecimalNumeric = declaration.type().equals(CobolUtil.NUMERIC) && declaration.hasDecimals();
         boolean definedAsNonDecimalNumeric = !definedAsDecimalNumeric && declaration.type().equals(CobolUtil.NUMERIC);
 
-        boolean valueIsString = !Util.unquote(value).equals(value);
-        boolean valueIsAlphaNumeric = valueIsString && value.matches(".*[0-9].*");
-        boolean valueIsAlpha = valueIsString && !valueIsAlphaNumeric;
-        boolean valueIsFloat = !valueIsString && value.contains(".");
-        boolean valueIsInteger = !valueIsString && !valueIsFloat;
-
-        if (definedAsAlpha && !valueIsAlpha) {
-            holder.registerProblem(declaration.getItemValueDecl_(), "Value is not alpha", ProblemHighlightType.WARNING);
+        if (definedAsAlpha && !literal.isAlphabetic()) {
+            holder.registerProblem(declaration.getItemValueDecl_(), "Value is not alphabetic", ProblemHighlightType.WARNING);
         }
 
-        if (definedAsAlphaNumeric && !valueIsAlphaNumeric) {
+        if (definedAsAlphaNumeric && !literal.isAlphaNumeric()) {
             holder.registerProblem(declaration.getItemValueDecl_(), "Value is not alphanumeric", ProblemHighlightType.WARNING);
         }
 
-
-        if (definedAsNonDecimalNumeric && !valueIsInteger) {
+        if (definedAsNonDecimalNumeric && !literal.isInteger()) {
             holder.registerProblem(declaration.getItemValueDecl_(), "Value is not integer", ProblemHighlightType.WARNING);
         }
 
-        if (definedAsDecimalNumeric && !valueIsFloat) {
+        if (definedAsDecimalNumeric && !literal.isFloat()) {
             holder.registerProblem(declaration.getItemValueDecl_(), "Value is not float", ProblemHighlightType.WARNING);
         }
     }
 
     private void sizeMismatch(CobolElementaryItemDecl_ declaration, ProblemsHolder holder) {
-        String value = declaration.initialValue();
+        PsiElement value = declaration.initialValue();
 
-        if (value == null) {
-            return;
+        if (!(value instanceof CobolLiteral_)) return;
+        CobolLiteral_ literal = (CobolLiteral_) value;
+
+        if (literal.isFigurativeConstant() && !literal.isAll()) return;
+
+        if (literal.isAll()) {
+            if (CobolUtil.isFigurativeConstant(literal.getLastChild())) return;
         }
 
+        String valueString = literal.isAll() ? literal.getLastChild().getText() : literal.getText();
+        valueString = Util.unquote(valueString);
+
         String error = "Value size exceeds data size.";
-        String valueString = Util.unquote(value);
 
         if (declaration.type().equals(CobolUtil.NUMERIC) && declaration.hasDecimals()) {
             String[] parts = valueString.split("\\.");
@@ -100,7 +100,6 @@ public class CobolInitialItemValue extends CobolInspectionBase {
             }
         }
     }
-
 
     private boolean isIntLengthOK(String value, int declaredLength) {
         if (value.length() > declaredLength) {

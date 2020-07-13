@@ -1,14 +1,15 @@
 package com.nikos.gnucobol_3_1;
 
-import com.intellij.codeInsight.daemon.*;
+import com.intellij.codeInsight.daemon.RelatedItemLineMarkerInfo;
+import com.intellij.codeInsight.daemon.RelatedItemLineMarkerProvider;
 import com.intellij.codeInsight.navigation.NavigationGutterIconBuilder;
-import com.intellij.psi.*;
+import com.intellij.psi.PsiElement;
 import com.nikos.gnucobol_3_1.psi.CobolCopy_;
 import com.nikos.gnucobol_3_1.psi.CobolFile;
 import com.nikos.gnucobol_3_1.psi.CobolTypes;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.Collection;
 
 public class CobolLineMarkerProvider extends RelatedItemLineMarkerProvider {
     @Override

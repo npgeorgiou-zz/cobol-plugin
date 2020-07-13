@@ -2,17 +2,22 @@ package com.nikos.gnucobol_3_1;
 
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.codeInsight.intention.impl.BaseIntentionAction;
-import com.intellij.lang.annotation.*;
+import com.intellij.lang.annotation.Annotation;
+import com.intellij.lang.annotation.AnnotationHolder;
+import com.intellij.lang.annotation.Annotator;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.*;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.nikos.gnucobol_3_1.colors.CobolSyntaxHighlighter;
 import com.nikos.gnucobol_3_1.psi.*;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class CobolAnnotator implements Annotator {
@@ -47,6 +52,19 @@ public class CobolAnnotator implements Annotator {
             CobolItemDecl_ itemDeclaration = (CobolItemDecl_) element;
 
             duplicateItemName(itemDeclaration, holder);
+
+            if (element instanceof CobolElementaryItemDecl_) {
+                CobolElementaryItemDecl_ item = (CobolElementaryItemDecl_) element;
+
+                if (item.redefines() != null) {
+                    checkRedefines(item, holder);
+                }
+
+                if (item.level() == 77) {
+                    checkNonContiguousItem(item, holder);
+                }
+            }
+
             return;
         }
 
@@ -102,7 +120,6 @@ public class CobolAnnotator implements Annotator {
             return;
         }
 
-
         if (element instanceof CobolMultiply_) {
             CobolMultiply_ multiply = (CobolMultiply_) element;
 
@@ -111,7 +128,6 @@ public class CobolAnnotator implements Annotator {
 
             return;
         }
-
 
         if (element instanceof CobolDivide_) {
             CobolDivide_ divide = (CobolDivide_) element;
@@ -181,6 +197,53 @@ public class CobolAnnotator implements Annotator {
         }
     }
 
+    private void checkRedefines(CobolElementaryItemDecl_ declaration, AnnotationHolder holder) {
+        PsiElement redefined = declaration.redefines();
+
+        if (redefined instanceof CobolElementaryItemDecl_) {
+            if (((CobolElementaryItemDecl_) redefined).redefines() != null) {
+                error(declaration, "Cant redefine a redefining item.", holder);
+                return;
+            }
+        }
+
+        CobolItemDecl_ previousSameLevelDecl = CobolUtil.previousSibling(
+            declaration,
+            (element) -> {
+                if (!(element instanceof CobolItemDecl_)) return false;
+                return ((CobolItemDecl_) element).level() < declaration.level();
+            },
+            (element) -> {
+                if (!(element instanceof CobolItemDecl_)) return false;
+
+                // Skip other redefinitions.
+                if (element instanceof CobolElementaryItemDecl_) {
+                    if (((CobolElementaryItemDecl_) element).redefines() != null) return false;
+                }
+
+                return ((CobolItemDecl_) element).level() == declaration.level();
+            }
+        );
+
+        if (!declaration.redefines().equals(previousSameLevelDecl)) {
+            error(declaration, "Redefining item must follow the original definition.", holder);
+        }
+    }
+
+    private void checkNonContiguousItem(CobolElementaryItemDecl_ declaration, AnnotationHolder holder) {
+        CobolItemDecl_ nextItem = CobolUtil.nextSibling(
+            declaration,
+            null,
+            (element) -> element instanceof CobolItemDecl_
+        );
+
+        if (nextItem == null) return;
+
+        if (nextItem.level() != 1 && nextItem.level() != 77) {
+            error(declaration, "Non-contiguous item can only be at first level.", holder);
+        }
+    }
+
     private void notGroupOperands(List<CobolItemUsage_> itemUsages, AnnotationHolder holder) {
         for (CobolItemUsage_ usage : itemUsages) {
             PsiElement reference = usage.getReference().resolve();
@@ -217,6 +280,11 @@ public class CobolAnnotator implements Annotator {
             if (!(declaration instanceof CobolElementaryItemDecl_)) continue;
 
             String type = ((CobolElementaryItemDecl_) reference.getParent()).type();
+
+            // Can happen if a user types pic after a group item, then it becomes an Elementary item
+            // but it still has no type. Maybe a better approach is to have only one Item and play with
+            // isGroup, isElem, isConditional etch.
+            if (type == null) continue;
 
             if (!type.equals(CobolUtil.NUMERIC)) {
                 error(usage, "Not a numeric item.", holder);

@@ -2,9 +2,12 @@ package com.nikos.gnucobol_3_1.colors;
 
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
-import com.intellij.openapi.options.colors.*;
+import com.intellij.openapi.options.colors.AttributesDescriptor;
+import com.intellij.openapi.options.colors.ColorDescriptor;
+import com.intellij.openapi.options.colors.ColorSettingsPage;
 import com.nikos.gnucobol_3_1.CobolIcons;
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.Map;
@@ -23,6 +26,7 @@ public class CobolColorSettingsPage implements ColorSettingsPage {
             new AttributesDescriptor("Identifier", CobolSyntaxHighlighter.IDENTIFIER_STYLE),
             new AttributesDescriptor("Keywords", CobolSyntaxHighlighter.KEYWORD_STYLE),
             new AttributesDescriptor("Conceptual data items", CobolSyntaxHighlighter.CONCEPTUAL_DATA_ITEMS_STYLE),
+            new AttributesDescriptor("Figurative constants", CobolSyntaxHighlighter.FIGURATIVE_CONSTANTS_STYLE),
             new AttributesDescriptor("Program declaration", CobolSyntaxHighlighter.PROGRAM_DECLARATION_STYLE),
             new AttributesDescriptor("Program end", CobolSyntaxHighlighter.PROGRAM_END_STYLE),
             new AttributesDescriptor("Program call", CobolSyntaxHighlighter.PROGRAM_CALL_STYLE),
@@ -53,6 +57,7 @@ public class CobolColorSettingsPage implements ColorSettingsPage {
                 "        working-storage section.\n" +
                 "            01 response pic 9(1).\n" +
                 "            01 response pic 9(1) value 3.\n" +
+                "            01 response pic 9(1) value zero.\n" +
                 "\n" +
                 "procedure division.\n" +
                 "    accept response from date yyyymmdd.\n" +

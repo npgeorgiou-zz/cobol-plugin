@@ -9,6 +9,8 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.nikos.gnucobol_3_1.CobolUtil;
 import com.nikos.gnucobol_3_1.Util;
 import com.nikos.gnucobol_3_1.psi.*;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -135,29 +137,21 @@ public class CobolPsiImplUtil {
     }
 
     public static Collection<CobolItemDecl_> wsItems(CobolProgram_ program) {
-        Optional<Object> a = Optional.of(program)
-                                 .map(it -> it.getDataDivision_())
-                                 .map(it -> it.getWsSection_())
-                                 .map(it -> it.getItemDecl_List());
-
-        if (a.isEmpty()) {
-            return new ArrayList<>();
-        }
-
-        return (Collection<CobolItemDecl_>) a.get();
+        return Optional.of(program)
+            .map(it -> it.getDataDivision_())
+            .map(it -> it.getWsSection_())
+            .map(it -> it.getItemDecl_List())
+            .map(it -> (Collection<CobolItemDecl_>) it)
+            .orElseGet(ArrayList::new);
     }
 
     public static Collection<CobolItemDecl_> lsItems(CobolProgram_ program) {
-        Optional<Object> a = Optional.of(program)
-                .map(it -> it.getDataDivision_())
-                .map(it -> it.getLsSection_())
-                .map(it -> it.getItemDecl_List());
-
-        if (a.isEmpty()) {
-            return new ArrayList<>();
-        }
-
-        return (Collection<CobolItemDecl_>) a.get();
+        return Optional.of(program)
+            .map(it -> it.getDataDivision_())
+            .map(it -> it.getLsSection_())
+            .map(it -> it.getItemDecl_List())
+            .map(it -> (Collection<CobolItemDecl_>) it)
+            .orElseGet(ArrayList::new);
     }
 
     public static Collection<CobolItemDecl_> items(CobolProgram_ program) {
@@ -218,48 +212,26 @@ public class CobolPsiImplUtil {
             return((CobolGroupItemDecl_) itemDecl).getItemNameDecl_().getName();
         }
 
+        if (itemDecl instanceof CobolRenamesItemDecl_) {
+            return((CobolRenamesItemDecl_) itemDecl).getItemNameDecl_().getName();
+        }
+
+        if (itemDecl instanceof CobolConditionalItemDecl_) {
+            return((CobolConditionalItemDecl_) itemDecl).getItemNameDecl_().getName();
+        }
+
         return null;
     }
 
     public static CobolItemDecl_ parent(CobolItemDecl_ itemDecl) {
-        if (itemDecl.level() == 1) {
-            return null;
-        }
-
-        // TODO: introduce itemDeclarationList wrapper to avoid this ugliness.
-        CobolProgram_ program = PsiTreeUtil.getParentOfType(itemDecl, CobolProgram_.class);
-        Collection<CobolItemDecl_> items = new ArrayList<>();
-
-        PsiElement parent = itemDecl.getParent();
-        if (parent instanceof CobolWsSection_) {
-            items = program.wsItems();
-        }
-
-        if (parent instanceof CobolLsSection_) {
-            items = program.lsItems();
-        }
-
-        // Look from bottom to top for a lower level.
-
-        // Why cant Java just do items.reverse()...
-        Collections.reverse((List<?>) items);
-
-        boolean reachedDeclarationsAbove = false;
-        for (CobolItemDecl_ otherDecl: items) {
-            if (otherDecl.equals(itemDecl)) {
-                reachedDeclarationsAbove = true;
+        return CobolUtil.previousSibling(
+            itemDecl,
+            null,
+            (element) -> {
+                if (!(element instanceof CobolItemDecl_)) return false;
+                return ((CobolItemDecl_) element).level() < itemDecl.level();
             }
-
-            if (!reachedDeclarationsAbove) {
-                continue;
-            }
-
-            if (otherDecl.level() < itemDecl.level()) {
-                return otherDecl;
-            }
-        }
-
-        return null;
+        );
     }
 
     public static String type(CobolElementaryItemDecl_ itemDeclaration) {
@@ -310,16 +282,64 @@ public class CobolPsiImplUtil {
         return Integer.parseInt(withoutParentheses);
     }
 
-    public static String initialValue(CobolElementaryItemDecl_ itemDeclaration) {
-        Optional<String> value = Optional.of(itemDeclaration)
-                                     .map(it -> it.getItemValueDecl_())
-                                     .map(it -> it.getLastChild())
-                                     .map(it -> it.getText());
+    public static CobolItemDecl_ redefines(CobolElementaryItemDecl_ itemDeclaration) {
+        ASTNode redefines = itemDeclaration.getNode().findChildByType(CobolTypes.REDEFINES);
 
-        if (value.isEmpty()) {
-            return null;
+        if (redefines == null) return null;
+
+        CobolItemUsage_ itemUsage = (CobolItemUsage_) redefines.getPsi().getNextSibling().getNextSibling();
+        CobolItemNameDecl_ nameDecl = (CobolItemNameDecl_) itemUsage.getReference().resolve();
+
+        if (nameDecl == null) return null;
+
+        return (CobolItemDecl_) nameDecl.getParent();
+    }
+
+    public static PsiElement initialValue(CobolElementaryItemDecl_ itemDeclaration) {
+        return Optional.of(itemDeclaration)
+            .map(it -> it.getItemValueDecl_())
+            .map(it -> it.getLastChild())
+            .orElse(null);
+    }
+
+    public static boolean isAlphabetic(CobolLiteral_ literal) {
+        if (literal.isAll()) {
+            return CobolUtil.isAlphabetic(literal.getLastChild());
         }
 
-        return value.get();
+        return CobolUtil.isAlphabetic(literal.getFirstChild());
+    }
+
+    public static boolean isAlphaNumeric(CobolLiteral_ literal) {
+        if (literal.isAll()) {
+            return CobolUtil.isAlphaNumeric(literal.getLastChild());
+        }
+
+        return CobolUtil.isAlphaNumeric(literal.getFirstChild());
+    }
+
+    public static boolean isInteger(CobolLiteral_ literal) {
+        if (literal.isAll()) {
+            return CobolUtil.isInteger(literal.getLastChild());
+        }
+
+        return CobolUtil.isInteger(literal.getFirstChild());
+    }
+
+    public static boolean isFloat(CobolLiteral_ literal) {
+        if (literal.isAll()) {
+            return CobolUtil.isFloat(literal.getLastChild());
+        }
+
+        return CobolUtil.isFloat(literal.getFirstChild());
+    }
+
+    public static boolean isFigurativeConstant(CobolLiteral_ literal) {
+        return CobolUtil.isFigurativeConstant(literal.getFirstChild());
+    }
+
+    public static boolean isAll(CobolLiteral_ literal) {
+        IElementType type = literal.getFirstChild().getNode().getElementType();
+        return type == CobolTypes.ALL;
     }
 }
