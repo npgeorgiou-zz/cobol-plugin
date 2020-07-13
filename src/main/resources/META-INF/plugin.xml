@@ -1,0 +1,68 @@
+<idea-plugin>
+    <id>org.nikos.gnucobol_3_1</id>
+    <name>Plugin display name here</name>
+    <vendor email="support@yourcompany.com" url="http://www.yourcompany.com">YourCompany</vendor>
+
+    <description><![CDATA[
+    Enter short description for your plugin here.<br>
+    <em>most HTML tags may be used</em>
+    ]]></description>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.java</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <fileType
+                name="Cobol File"
+                implementationClass="com.nikos.gnucobol_3_1.CobolFileType"
+                fieldName="INSTANCE"
+                language="Cobol"
+                extensions="cob"
+        />
+
+        <lang.namesValidator language="Cobol" implementationClass="com.nikos.gnucobol_3_1.refactoring.CobolNamesValidator"/>
+        <lang.parserDefinition language="Cobol" implementationClass="com.nikos.gnucobol_3_1.CobolParserDefinition"/>
+        <lang.syntaxHighlighterFactory language="Cobol" implementationClass="com.nikos.gnucobol_3_1.colors.CobolSyntaxHighlighterFactory"/>
+        <colorSettingsPage implementation="com.nikos.gnucobol_3_1.colors.CobolColorSettingsPage"/>
+        <annotator language="Cobol" implementationClass="com.nikos.gnucobol_3_1.colors.CobolHighlightingAnnotator"/>
+        <annotator language="Cobol" implementationClass="com.nikos.gnucobol_3_1.CobolAnnotator"/>
+        <lang.commenter language="Cobol" implementationClass="com.nikos.gnucobol_3_1.CobolCommenter"/>
+        <lang.foldingBuilder language="Cobol"  implementationClass="com.nikos.gnucobol_3_1.CobolFoldingBuilder"/>
+        <completion.contributor language="Cobol" implementationClass="com.nikos.gnucobol_3_1.completion.CobolCompletionContributor"/>
+        <codeInsight.lineMarkerProvider language="Cobol" implementationClass="com.nikos.gnucobol_3_1.CobolLineMarkerProvider"/>
+        <lang.findUsagesProvider language="Cobol" implementationClass="com.nikos.gnucobol_3_1.CobolFindUsagesProvider"/>
+        <lang.refactoringSupport language="Cobol" implementationClass="com.nikos.gnucobol_3_1.CobolRefactoringSupportProvider"/>
+
+        <!-- Inspections -->
+        <localInspection language="Cobol" shortName="CobolNotComputeMathStatement" displayName="Doing math without compute" groupName="Cobol"
+                         enabledByDefault="true" level="WARNING" implementationClass="com.nikos.gnucobol_3_1.inspections.CobolNotComputeMathStatement"/>
+
+        <localInspection language="Cobol" shortName="CobolUnusedItem" displayName="Unused variable" groupName="Cobol"
+                         enabledByDefault="true" level="WARNING" implementationClass="com.nikos.gnucobol_3_1.inspections.CobolUnusedItem"/>
+
+        <localInspection language="Cobol" shortName="CobolRedundantKeywords" displayName="Redundant keywords" groupName="Cobol"
+                         enabledByDefault="true" level="INFO" implementationClass="com.nikos.gnucobol_3_1.inspections.CobolRedundantKeywords"/>
+
+        <localInspection language="Cobol" shortName="CobolInitialItemValue" displayName="Type and initial value mismatches" groupName="Cobol"
+                         enabledByDefault="true" level="INFO" implementationClass="com.nikos.gnucobol_3_1.inspections.CobolInitialItemValue"/>
+
+        <localInspection language="Cobol" shortName="CobolListsWithoutCommas" displayName="Lists without commas" groupName="Cobol"
+                         enabledByDefault="true" level="INFO" implementationClass="com.nikos.gnucobol_3_1.inspections.CobolListsWithoutCommas"/>
+
+
+    </extensions>
+
+    <actions>
+        <!-- Add your actions here -->
+        <action
+                id="com.nikos.gnucobol_3_1.actions.PopupDialogAction"
+                class="com.nikos.gnucobol_3_1.actions.PopupDialogAction"
+                text="Popup Dialog Action"
+                description="Example"
+        >
+            <add-to-group group-id="ToolsMenu" anchor="first"/>
+        </action>
+    </actions>
+</idea-plugin>

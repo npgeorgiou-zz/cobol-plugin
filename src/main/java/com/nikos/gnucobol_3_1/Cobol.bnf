@@ -1,0 +1,237 @@
+{
+  parserClass="com.nikos.gnucobol_3_1.parser.CobolParser"
+
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+  psiClassPrefix="Cobol"
+  psiImplClassSuffix="Impl"
+  psiPackage="com.nikos.gnucobol_3_1.psi"
+  psiImplPackage="com.nikos.gnucobol_3_1.psi.impl"
+
+  elementTypeHolderClass="com.nikos.gnucobol_3_1.psi.CobolTypes"
+  elementTypeClass="com.nikos.gnucobol_3_1.psi.CobolElementType"
+  tokenTypeClass="com.nikos.gnucobol_3_1.psi.CobolTokenType"
+
+  psiImplUtilClass="com.nikos.gnucobol_3_1.psi.impl.CobolPsiImplUtil"
+}
+
+{
+  tokens = [
+    SPACE = "regexp:\s+"
+    COMMENT='regexp:\*>.*'
+    INTEGER = "regexp:[\+\-]?[0-9]+"
+    FLOAT = "regexp:[\+\-]?[0-9]+\.[0-9]+"
+
+    STRING="regexp:('([^'\\]|\\.)*'|\"([^\"\\]|\\.)*\")"
+
+    IDENTIFICATION_DIVISION = "identification division"
+    PROGRAM_ID = "program-id"
+    ENVIRONMENT_DIVISION = "environment division"
+    DATA_DIVISION = "data division"
+    WORKING_STORAGE_SECTION = "working-storage section"
+    LOCAL_STORAGE_SECTION = "local-storage section"
+    LINKAGE_SECTION = "linkage section"
+    PROCEDURE_DIVISION = "procedure division"
+
+    DOT = "regexp:\."
+    PAREN_OPEN = '('
+    PAREN_CLOSE = ')'
+    COMMA = ','
+    EQUALS_OP = '='
+    POWER_OP = '**'
+    ADD_OP = '+'
+    SUBTRACT_OP = '-'
+    MULTIPLY_OP = '*'
+    DIVIDE_OP = '/'
+
+    PIC = 'pic'
+    PICTURE = 'picture'
+    ACCEPT = 'accept'
+    FROM = 'from'
+    DATE = 'date'
+    YYYYMMDD = 'yyyymmdd'
+    DAY = 'day'
+    YYYYDDD = 'yyyyddd'
+    DAY_OF_WEEK = 'day-of-week'
+    TIME = 'time'
+    DISPLAY = 'display'
+    OF = 'of'
+    IN = 'in'
+    ADD = 'add'
+    GIVING = 'giving'
+    SUBTRACT = 'subtract'
+    MULTIPLY = 'multiply'
+    DIVIDE = 'divide'
+    INTO = 'into'
+    REMAINDER = 'remainder'
+    COMPUTE = 'compute'
+    INITIALIZE = 'initialize'
+    REPLACING = 'replacing'
+    ALPHABETIC = 'alphabetic'
+    ALPHANUMERIC = 'alphanumeric'
+    NUMERIC = 'numeric'
+    DATA = 'data'
+    BY = 'by'
+    USING = 'using'
+    MOVE = 'move'
+    CORR = 'corr'
+    CORRESPONDING = 'corresponding'
+    TO = 'to'
+    END = 'end'
+    CALL = 'call'
+    VALUE = 'value'
+    IS = 'is'
+    PROGRAM = 'program'
+    COPY = 'copy'
+
+    PIC_TYPE_ALPHABETIC = 'a'
+    PIC_TYPE_ALPHANUMERIC = 'x'
+    PIC_TYPE_NUMERIC = '9'
+    PIC_TYPE_SIGNED_NUMERIC = 's9'
+    PIC_TYPE_DECIMAL_NUMERIC = 'v9'
+
+    DECLARE = 'declare'
+    USE = 'use'
+
+    IDENTIFIER = "regexp:(\w+)([\w-]*)(\w+)"
+  ]
+
+  implements("program_name_decl_|item_name_decl_")="com.nikos.gnucobol_3_1.psi.CobolNamedElement"
+}
+
+// BNF vocabulary distinguishes between: terminal / non-terminal symbols.
+// The Grammar-Kit plugin calls them:     tokens  / elements.
+// I postfix each element with _ to avoid name collisions.
+// For example The Grammar-Kit would produce an IElementType CALL both from the element call and the token CALL.
+file ::= (program_|copy_)*
+
+copy_ ::= COPY STRING DOT {pin=1 methods=[path file]}
+
+program_ ::=  identification_division_
+              environment_division_?
+              data_division_?
+              procedure_division_?
+              end_program_
+              {methods=[name wsItems lsItems items groupItems elementaryItems subPrograms calls]}
+
+end_program_ ::= END PROGRAM program_name_ DOT {pin=2}
+
+
+program_name_decl_ ::= identifier_or_string_ {methods=[setName getName getNameIdentifier]}
+program_name_ ::= identifier_or_string_ {methods=[setName getReference]}
+
+
+identification_division_ ::= IDENTIFICATION_DIVISION DOT
+                               program_id_
+                               author_?
+                               installation_?
+                               date_written_?
+                               date_compiled_?
+                               security_?
+                               {pin=1 recoverWhile=not_other_division}
+private not_other_division ::= !(environment_division_|data_division_|procedure_division_)
+
+program_id_     ::= PROGRAM_ID DOT program_name_decl_ DOT {pin=1}
+author_         ::= AUTHOR [DOT] [STRING] [DOT]  // TODO: They can actually be anything.
+installation_   ::= INSTALLATION [DOT] [STRING] [DOT]
+date_written_   ::= DATE-WRITTEN [DOT] [STRING] [DOT]
+date_compiled_  ::= DATE-COMPILED [DOT] [STRING] [DOT]
+security_       ::= SECURITY [DOT] [STRING] [DOT]
+
+environment_division_ ::= ENVIRONMENT_DIVISION DOT
+
+data_division_ ::= DATA_DIVISION DOT
+               ws_section_?
+               ls_section_?
+               linkage_section_?
+
+ws_section_ ::= WORKING_STORAGE_SECTION DOT
+                  (item_decl_)*
+                {pin=1 recoverWhile=not_wd_section_end}
+private not_wd_section_end ::= !(ls_section_|linkage_section_|procedure_division_)
+
+ls_section_ ::= LOCAL_STORAGE_SECTION DOT
+                  (item_decl_)*
+                {pin=1 recoverWhile=not_ls_section_end}
+private not_ls_section_end ::= !(linkage_section_|procedure_division_)
+
+linkage_section_ ::= LINKAGE_SECTION DOT
+                       (item_decl_)*
+                     {pin=1 recoverWhile=not_linkage_section_end}
+private not_linkage_section_end ::= !(procedure_division_)
+
+item_decl_ ::= (group_item_decl_|elementary_item_decl_ ) {methods=[level name parent]}
+
+group_item_decl_ ::= item_level_decl_ item_name_decl_ DOT                              {extends="item_decl_" methods=[children]}
+elementary_item_decl_ ::= item_level_decl_ item_name_decl_ item_type_decl_ [item_value_decl_] DOT  {extends="item_decl_" methods=[type isSigned hasDecimals length decimalLength initialValue]}
+
+private item_level_decl_::= INTEGER
+item_type_decl_::= (PIC|PICTURE) [IS] (
+               PIC_TYPE_ALPHA item_length_decl_ |
+               PIC_TYPE_ALPHANUMERIC item_length_decl_ |
+               PIC_TYPE_NUMERIC item_length_decl_ [PIC_TYPE_DECIMAL_NUMERIC item_length_decl_] |
+               PIC_TYPE_SIGNED_NUMERIC item_length_decl_ [PIC_TYPE_DECIMAL_NUMERIC item_length_decl_]
+             ) {pin=1}
+
+item_length_decl_ ::= PAREN_OPEN INTEGER PAREN_CLOSE
+item_value_decl_::= VALUE [IS] literal_ {pin=1}
+
+
+procedure_division_ ::= PROCEDURE_DIVISION [using_] DOT
+                          (program_|sentence_)*
+                        {pin=1 recoverWhile=not_end_program}
+private not_end_program ::= !(end_program_)
+
+private using_ ::= USING IDENTIFIER+
+
+
+sentence_ ::= (statement_+ DOT) {pin=1}
+statement_ ::= (accept_|display_|initialize_|move_|add_|subtract_|multiply_|divide_|compute_|call_) {pin=1}
+
+item_name_decl_ ::= IDENTIFIER {methods=[setName getName getNameIdentifier]}
+
+accept_ ::= ACCEPT item [FROM (IDENTIFIER|DATE [YYYYMMDD]|DAY [YYYYDDD]|DAY-OF-WEEK|TIME)] {pin=1}
+display_ ::= DISPLAY list_of_items_or_literals {pin=1}
+initialize_ ::= INITIALIZE list_of_items [replacing_] {pin=1}
+move_ ::= MOVE [CORR|CORRESPONDING] item_or_literal_ TO list_of_items {pin=1}
+
+add_ ::= ADD (add_corr_|add_not_corr) {pin=1}
+private add_corr_::= (CORR|CORRESPONDING) item TO item {pin=1}
+private add_not_corr ::= list_of_items_or_numbers (TO item GIVING list_of_items | TO list_of_items | GIVING list_of_items) {pin=1}
+
+subtract_ ::= SUBTRACT (subtract_corr_|subtract_not_corr) {pin=1}
+private subtract_corr_::= (CORR|CORRESPONDING) item FROM item {pin=1}
+private subtract_not_corr ::= list_of_items_or_numbers (FROM item GIVING list_of_items | FROM list_of_items) {pin=1}
+
+multiply_ ::= MULTIPLY item_or_number_literal_ BY (item GIVING list_of_items | list_of_items) {pin=1}
+
+divide_ ::= DIVIDE item_or_number_literal_ (divide_into|divide_by) {pin=1}
+private divide_into ::=   INTO (item GIVING item REMAINDER item | item GIVING list_of_items | list_of_items)  {pin=1}
+private divide_by   ::=  BY item_or_number_literal_ GIVING (item REMAINDER item | list_of_items)    {pin=1}
+
+compute_ ::= COMPUTE list_of_items EQUALS_OP add_or_subtract_expr_ {pin=1}
+private add_or_subtract_expr_ ::= multiply_or_divide_expr ((ADD_OP | SUBTRACT_OP) multiply_or_divide_expr)*
+private multiply_or_divide_expr ::= power_expr_ ((MULTIPLY_OP | DIVIDE_OP ) power_expr_)*
+private power_expr_ ::= math_operand  (POWER_OP math_operand)*
+private math_operand ::= (item_or_number_literal_ | PAREN_OPEN add_or_subtract_expr_ PAREN_CLOSE)
+
+call_ ::= CALL identifier_or_string_ [USING IDENTIFIER] {pin=1 methods=[isStatic subprogramName]}
+
+private replacing_ ::= REPLACING (replacing_by_ [COMMA])+ {pin=1}
+private replacing_by_ ::= (ALPHABETIC|ALPHANUMERIC|NUMERIC) [DATA] BY item_or_literal_ {pin=1}
+
+private item ::=  item_usage_ of_item_usage*
+private of_item_usage ::= (OF|IN) item_usage_ {pin=1}
+
+item_usage_ ::= IDENTIFIER {methods=[setName getReference typedGroupItem parentChain]}
+
+identifier_or_string_ ::= (IDENTIFIER|STRING)
+private item_or_number_literal_ ::= (item|number_literal_)
+private item_or_literal_ ::= (item|literal_)
+private literal_ ::= (STRING|number_literal_)
+private number_literal_ ::= (INTEGER|FLOAT)
+
+private list_of_items_or_literals ::=  <<list item_or_literal_>>
+private list_of_items_or_numbers ::=  <<list item_or_number_literal_>>
+private list_of_items ::=  <<list item>>
+private meta list ::= <<item>>? ([COMMA] <<item>>)*

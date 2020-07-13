@@ -1,0 +1,163 @@
+//{
+//  parserClass="com.nikos.snowballPlugin.parser.SnowballParser"
+//
+//  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+//
+//  psiClassPrefix="Snowball"
+//  psiImplClassSuffix="Impl"
+//  psiPackage="com.nikos.snowballPlugin.psi"
+//  psiImplPackage="com.nikos.snowballPlugin.psi.impl"
+//
+//  elementTypeHolderClass="com.nikos.snowballPlugin.psi.SnowballTypes"
+//  elementTypeClass="com.nikos.snowballPlugin.psi.SnowballElementType"
+//  tokenTypeClass="com.nikos.snowballPlugin.psi.SnowballTokenType"
+//
+//  psiImplUtilClass="com.nikos.snowballPlugin.psi.impl.SnowballPsiImplUtil"
+//}
+
+{
+  tokens = [
+    DOT = "regexp:\."
+    SPACE = "regexp:\s+"
+    COMMENT='regexp:\*>.*'
+    INTEGER = "regexp:[\+\-]?[0-9]+"
+    FLOAT = "regexp:[\+\-]?[0-9]+\.[0-9]+"
+    STRING="regexp:('([^'\\]|\\.)*'|\"([^\"\\]|\\.)*\")"
+
+    AUTHOR_ANN = '@author'
+    STATIC_ANN = '@static'
+    P_OPEN = '('
+    P_CLOSE = ')'
+    CB_OPEN = '{'
+    CB_CLOSE = '}'
+    SB_OPEN = '['
+    SB_CLOSE = ']'
+    COMMA = ','
+    MOVE_OP = '<-'
+    POWER_OP = '**'
+    ADD_OP = '+'
+    SUBTRACT_OP = '-'
+    MULTIPLY_OP = '*'
+    DIVIDE_OP = '/'
+    MODULO_OP = '%'
+
+    TYPE_STRING = 'string'
+    TYPE_INT = 'int'
+    TYPE_FLOAT = 'float'
+
+    IDENTIFIER = "regexp:(\w+)([\w-]*)(\w+)"
+  ]
+}
+
+file ::= [copies] [programs]
+
+copies ::= copy*
+programs ::= program_*
+
+copy ::= 'copy' STRING DOT {pin=1}
+
+program_ ::= annotation*
+             program IDENTIFIER [param_declaration] CB_OPEN [program_body] CB_CLOSE {pin=2}
+
+annotation ::= (author_annotation|static_var_annotation)
+author_annotation ::= AUTHOR_ANN IDENTIFIER* DOT
+static_var_annotation ::= STATIC_ANN item_decl DOT
+
+param_declaration ::= P_OPEN list_of_params P_CLOSE
+list_of_params ::=  <<list param>>
+param ::= item_name_decl item_type_decl item_length_decl
+
+
+program_body ::= statement*
+                  programs
+
+private item_decl ::= (elementary_item_decl|group_item_decl)
+elementary_item_decl ::= item_name_decl item_type_decl item_length_decl [var_init] {pin=2}
+item_name_decl ::= IDENTIFIER
+item_type_decl ::= (TYPE_STRING|TYPE_INT|TYPE_FLOAT)
+item_length_decl ::= SB_OPEN INTEGER SB_CLOSE
+var_init ::= MOVE_OP expession
+
+group_item_decl ::= item_name_decl CB_OPEN <<list item_decl>> CB_CLOSE {pin=3}
+
+
+statement ::= (elementary_item_decl|group_item_decl|move|display|function_call) DOT
+
+move ::= list_of_identifiers MOVE_OP expession {pin=2}
+display ::= 'display' P_OPEN list_of_identifiers_or_literals P_CLOSE{pin=1}
+
+
+private expession ::= (function_call|add_or_subtract_expr_|literal)
+
+function_call ::= IDENTIFIER P_OPEN arg_list P_CLOSE
+arg_list ::=  <<list identifier_or_literal>>
+
+
+private add_or_subtract_expr_ ::= multiply_or_divide_or_modulo_expr ((ADD_OP | SUBTRACT_OP) multiply_or_divide_or_modulo_expr)*
+private multiply_or_divide_or_modulo_expr ::= power_expr_ ((MULTIPLY_OP | DIVIDE_OP | MODULO_OP) power_expr_)*
+private power_expr_ ::= math_operand  (POWER_OP math_operand)*
+private math_operand ::= (identifier_or_number_literal | P_OPEN add_or_subtract_expr_ P_CLOSE)
+
+
+private list_of_identifiers ::=  <<list IDENTIFIER>>
+private list_of_identifiers_or_literals ::=  <<list identifier_or_literal>>
+private meta list ::= <<item>>? (COMMA <<item>>)*
+private identifier_or_literal ::= (IDENTIFIER|literal)
+private identifier_or_number_literal ::= (IDENTIFIER|number_literal)
+private literal ::= (STRING|number_literal)
+private number_literal ::= (INTEGER|FLOAT)
+
+
+
+//copy 'foo/bar'.
+//
+//@author lala lala.
+//@static foo int[3] <- 1.
+//@static foo {
+//  foo int[3] <- 1,
+//  foo {
+//    foo int[3] <- 1,
+//    foo int[3] <- 1
+//  }
+//}.
+//program hello {
+//  foo int[3].
+//  foo <- 8.
+//  foo <- 8 ** 3.
+//  foo, bar, baz <- 8.
+//
+//  foo <- accept().
+//  display('foo is: %foo and I am happy').
+//  display('foo is: %foo and I am happy', bar).
+//
+//  baz int[5] <- accept().
+//
+//  hello2(baz).
+//
+//  foo {
+//    foo int[3] <- 1,
+//    foo int[3] <- 1,
+//    foo int[3] <- 1,
+//    foo {
+//      foo int[3] <- 1,
+//      foo int[3] <- 1,
+//      foo int[3] <- 1
+//    }
+//  }.
+//
+//  program hello2(arg int[5]) {
+//    *> display(static:invocationCount).
+//    display(arg).
+//  }
+//}
+
+
+
+
+
+
+
+
+
+
+
