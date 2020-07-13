@@ -295,6 +295,10 @@ public class CobolPsiImplUtil {
         return (CobolItemDecl_) nameDecl.getParent();
     }
 
+    public static Collection<CobolLiteral_> trueIf(CobolConditionalItemDecl_ itemDeclaration) {
+        return itemDeclaration.getLiteral_List();
+    }
+
     public static PsiElement initialValue(CobolElementaryItemDecl_ itemDeclaration) {
         return Optional.of(itemDeclaration)
             .map(it -> it.getItemValueDecl_())

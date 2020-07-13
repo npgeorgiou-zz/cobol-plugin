@@ -114,6 +114,8 @@ IDENTIFIER = ([:jletterdigit:])+ (- | [:jletterdigit:])* ([:jletterdigit:])+
     "numeric"                 {return CobolTypes.NUMERIC;}
     "data"                    {return CobolTypes.DATA;}
     "by"                      {return CobolTypes.BY;}
+    "set"                     {return CobolTypes.SET;}
+    "true"                    {return CobolTypes.TRUE;}
 
     "using"                   {return CobolTypes.USING;}
     "move"                    {return CobolTypes.MOVE;}

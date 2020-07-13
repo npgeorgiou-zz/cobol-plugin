@@ -45,6 +45,10 @@ public class CobolListsWithoutCommas extends CobolInspectionBase {
             public void visitCompute_(@NotNull CobolCompute_ compute) {
                 checkItemList(compute, holder);
             }
+
+            public void visitSet_(@NotNull CobolSet_ set) {
+                checkItemList(set, holder);
+            }
         };
     }
 

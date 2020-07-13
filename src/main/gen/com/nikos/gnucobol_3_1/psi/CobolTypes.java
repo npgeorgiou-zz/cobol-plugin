@@ -47,6 +47,7 @@ public interface CobolTypes {
   IElementType RENAMES_ITEM_DECL_ = new CobolElementType("RENAMES_ITEM_DECL_");
   IElementType SECURITY_ = new CobolElementType("SECURITY_");
   IElementType SENTENCE_ = new CobolElementType("SENTENCE_");
+  IElementType SET_ = new CobolElementType("SET_");
   IElementType STATEMENT_ = new CobolElementType("STATEMENT_");
   IElementType SUBTRACT_ = new CobolElementType("SUBTRACT_");
   IElementType WS_SECTION_ = new CobolElementType("WS_SECTION_");
@@ -123,6 +124,7 @@ public interface CobolTypes {
   IElementType RENAMES = new CobolTokenType("RENAMES");
   IElementType REPLACING = new CobolTokenType("REPLACING");
   IElementType SECURITY = new CobolTokenType("SECURITY");
+  IElementType SET = new CobolTokenType("SET");
   IElementType SPACE = new CobolTokenType("space");
   IElementType SPACES = new CobolTokenType("spaces");
   IElementType STRING = new CobolTokenType("STRING");
@@ -132,6 +134,7 @@ public interface CobolTypes {
   IElementType THRU = new CobolTokenType("THRU");
   IElementType TIME = new CobolTokenType("TIME");
   IElementType TO = new CobolTokenType("TO");
+  IElementType TRUE = new CobolTokenType("TRUE");
   IElementType USING = new CobolTokenType("USING");
   IElementType VALUE = new CobolTokenType("VALUE");
   IElementType WORKING_STORAGE_SECTION = new CobolTokenType("WORKING_STORAGE_SECTION");
@@ -260,6 +263,9 @@ public interface CobolTypes {
       }
       else if (type == SENTENCE_) {
         return new CobolSentence_Impl(node);
+      }
+      else if (type == SET_) {
+        return new CobolSet_Impl(node);
       }
       else if (type == STATEMENT_) {
         return new CobolStatement_Impl(node);

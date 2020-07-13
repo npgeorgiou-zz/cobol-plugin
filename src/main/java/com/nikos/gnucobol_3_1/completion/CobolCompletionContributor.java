@@ -372,7 +372,6 @@ public class CobolCompletionContributor extends CompletionContributor {
                                     new Node(
                                         item(), new ElementaryItems()))))))));
 
-
         Node computeStatement = new RootNode(CobolCompute_.class,
             psiElement(CobolTypes.COMPUTE),
             new RepeatingNode(
@@ -386,6 +385,17 @@ public class CobolCompletionContributor extends CompletionContributor {
                         null,
                         new NonConditionalProgramItems()))));
 
+        Node setStatement = new RootNode(CobolSet_.class,
+            psiElement(CobolTypes.SET),
+            new RepeatingNode(
+                listOfItems(),
+                null,
+                new ConditionalProgramItems(),
+                new Node(
+                    psiElement(CobolTypes.TO), new Keywords(true, "to"),
+                    new Node(
+                        psiElement(CobolTypes.TRUE), new Keywords(true, "true")))));
+
         extendFor(acceptStatement);
         extendFor(displayStatement);
         extendFor(callStatement);
@@ -396,6 +406,7 @@ public class CobolCompletionContributor extends CompletionContributor {
         extendFor(multiplyStatement);
         extendFor(divideStatement);
         extendFor(computeStatement);
+        extendFor(setStatement);
     }
     
     private PsiElementPattern.Capture<PsiElement> afterItemUsage() {

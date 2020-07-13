@@ -378,7 +378,7 @@ public class CobolParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // '88' item_name_decl_ VALUE list_of_items_or_literals
+  // '88' item_name_decl_ VALUE list_of_literals
   public static boolean conditional_item_decl_(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "conditional_item_decl_")) return false;
     boolean r;
@@ -386,7 +386,7 @@ public class CobolParser implements PsiParser, LightPsiParser {
     r = consumeToken(b, "88");
     r = r && item_name_decl_(b, l + 1);
     r = r && consumeToken(b, VALUE);
-    r = r && list_of_items_or_literals(b, l + 1);
+    r = r && list_of_literals(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
@@ -1237,6 +1237,12 @@ public class CobolParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // <<list literal_>>
+  static boolean list_of_literals(PsiBuilder b, int l) {
+    return list(b, l + 1, literal__parser_);
+  }
+
+  /* ********************************************************** */
   // string_literal_|number_literal_
   public static boolean literal_(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "literal_")) return false;
@@ -1979,6 +1985,21 @@ public class CobolParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // SET list_of_items TO TRUE
+  public static boolean set_(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "set_")) return false;
+    if (!nextTokenIs(b, SET)) return false;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, SET_, null);
+    r = consumeToken(b, SET);
+    p = r; // pin = 1
+    r = r && report_error_(b, list_of_items(b, l + 1));
+    r = p && report_error_(b, consumeTokens(b, -1, TO, TRUE)) && r;
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
+  }
+
+  /* ********************************************************** */
   // space|spaces
   static boolean space_(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "space_")) return false;
@@ -1990,7 +2011,7 @@ public class CobolParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // accept_|display_|initialize_|move_|add_|subtract_|multiply_|divide_|compute_|call_
+  // accept_|display_|initialize_|move_|add_|subtract_|multiply_|divide_|compute_|call_|set_
   public static boolean statement_(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "statement_")) return false;
     boolean r;
@@ -2005,6 +2026,7 @@ public class CobolParser implements PsiParser, LightPsiParser {
     if (!r) r = divide_(b, l + 1);
     if (!r) r = compute_(b, l + 1);
     if (!r) r = call_(b, l + 1);
+    if (!r) r = set_(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
@@ -2209,6 +2231,11 @@ public class CobolParser implements PsiParser, LightPsiParser {
   static final Parser item_parser_ = new Parser() {
     public boolean parse(PsiBuilder b, int l) {
       return item(b, l + 1);
+    }
+  };
+  static final Parser literal__parser_ = new Parser() {
+    public boolean parse(PsiBuilder b, int l) {
+      return literal_(b, l + 1);
     }
   };
   static final Parser not_dot_parser_ = new Parser() {

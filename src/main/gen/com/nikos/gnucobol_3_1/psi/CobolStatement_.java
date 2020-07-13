@@ -35,6 +35,9 @@ public interface CobolStatement_ extends PsiElement {
   CobolMultiply_ getMultiply_();
 
   @Nullable
+  CobolSet_ getSet_();
+
+  @Nullable
   CobolSubtract_ getSubtract_();
 
 }

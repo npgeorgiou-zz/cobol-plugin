@@ -163,6 +163,10 @@ public class CobolVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
+  public void visitSet_(@NotNull CobolSet_ o) {
+    visitPsiElement(o);
+  }
+
   public void visitStatement_(@NotNull CobolStatement_ o) {
     visitPsiElement(o);
   }

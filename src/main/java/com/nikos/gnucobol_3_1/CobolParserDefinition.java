@@ -89,7 +89,9 @@ public class CobolParserDefinition implements ParserDefinition {
             CobolTypes.PROGRAM,
             CobolTypes.COPY,
             CobolTypes.CALL,
-            CobolTypes.USING
+            CobolTypes.USING,
+            CobolTypes.SET,
+            CobolTypes.TRUE
     );
 
     public static final TokenSet CONCEPTUAL_DATA_ITEMS = TokenSet.create(

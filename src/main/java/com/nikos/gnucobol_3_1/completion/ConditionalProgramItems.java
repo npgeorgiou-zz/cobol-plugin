@@ -9,10 +9,12 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.PlatformIcons;
 import com.intellij.util.ProcessingContext;
 import com.nikos.gnucobol_3_1.CobolUtil;
+import com.nikos.gnucobol_3_1.Util;
 import com.nikos.gnucobol_3_1.psi.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 class ConditionalProgramItems extends CobolCompletionProvider {
@@ -25,45 +27,29 @@ class ConditionalProgramItems extends CobolCompletionProvider {
         if (program == null) return;
 
         Collection<CobolItemDecl_> items = program.items();
-        items = items.stream().filter(it -> it instanceof CobolConditionalItemDecl_).collect(Collectors.toList());
+        Collection<CobolConditionalItemDecl_> filtered = items.stream()
+                                                             .filter(it -> it instanceof CobolConditionalItemDecl_)
+                                                             .map(it -> (CobolConditionalItemDecl_) it)
+                                                             .collect(Collectors.toList());
 
-        for (CobolItemDecl_ var : items) {
-            resultSet.addElement(createLookupElement(var));
+        for (CobolConditionalItemDecl_ item : filtered) {
+            resultSet.addElement(createLookupElement(item));
         }
     }
 
-    protected LookupElement createLookupElement(CobolItemDecl_ var) {
+    protected LookupElement createLookupElement(CobolConditionalItemDecl_ item) {
         return LookupElementBuilder
-                   .create(var.name())
+                   .create(item.name())
                    .withIcon(PlatformIcons.VARIABLE_ICON)
-                   .withTypeText(typeDescription(var))
+                   .withTypeText(typeDescription(item))
                    .withTypeIconRightAligned(true);
     }
 
-    private String typeDescription(CobolItemDecl_ var) {
-        if (var instanceof CobolGroupItemDecl_ || var instanceof CobolRenamesItemDecl_) {
-            return "Group item";
-        }
-
-        CobolElementaryItemDecl_ elementaryDecl = (CobolElementaryItemDecl_) var;
-        String type = elementaryDecl.type();
-
-        if (type.equals(CobolUtil.ALPHA)) {
-            return "alpha(" + elementaryDecl.length() + ")";
-        }
-
-        if (type.equals(CobolUtil.ALPHANUMERIC)) {
-            return "alphanumeric(" + elementaryDecl.length() + ")";
-        }
-
-        if (type.equals(CobolUtil.NUMERIC)) {
-            return
-                (elementaryDecl.isSigned() ? "signed " : "") +
-                ("numeric(" + elementaryDecl.length() + ")") +
-                (elementaryDecl.hasDecimals() ? "(" + elementaryDecl.decimalLength() + ")" : "");
-        }
-
-        return "";
+    private String typeDescription(CobolConditionalItemDecl_ item) {
+        return "Conditional item: " + Util.implode(
+            item.trueIf().stream().map(it -> Util.unquote(it.getText())).collect(Collectors.toList()),
+            "|"
+        );
     }
 
 }

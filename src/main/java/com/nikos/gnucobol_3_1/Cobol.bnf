@@ -70,6 +70,9 @@
     NUMERIC = 'numeric'
     DATA = 'data'
     BY = 'by'
+    SET = 'set'
+    TRUE = 'true'
+
     USING = 'using'
     MOVE = 'move'
     CORR = 'corr'
@@ -171,7 +174,7 @@ group_item_decl_ ::= item_level_decl_ item_name_decl_ {extends="item_decl_" meth
 elementary_item_decl_ ::= item_level_decl_ item_name_decl_ (normal_| redefines_)
                                                            {extends="item_decl_" methods=[redefines type isSigned hasDecimals length decimalLength initialValue]}
 renames_item_decl_ ::=  '66' item_name_decl_ RENAMES item_usage_ [THROUGH|THRU] item_usage_ {extends="item_decl_"}
-conditional_item_decl_ ::=  '88' item_name_decl_ VALUE list_of_items_or_literals {extends="item_decl_"}
+conditional_item_decl_ ::=  '88' item_name_decl_ VALUE list_of_literals {extends="item_decl_" methods=[trueIf]}
 
 private normal_ ::= item_type_decl_ [item_value_decl_]
 private redefines_ ::=  REDEFINES item_usage_ item_type_decl_
@@ -196,7 +199,7 @@ private using_ ::= USING IDENTIFIER+
 
 
 sentence_ ::= (statement_+ DOT) {pin=1}
-statement_ ::= (accept_|display_|initialize_|move_|add_|subtract_|multiply_|divide_|compute_|call_) {pin=1}
+statement_ ::= (accept_|display_|initialize_|move_|add_|subtract_|multiply_|divide_|compute_|call_|set_) {pin=1}
 
 item_name_decl_ ::= IDENTIFIER {methods=[setName getName getNameIdentifier]}
 
@@ -225,6 +228,7 @@ private multiply_or_divide_expr ::= power_expr_ ((MULTIPLY_OP | DIVIDE_OP ) powe
 private power_expr_ ::= math_operand  (POWER_OP math_operand)*
 private math_operand ::= (item_or_number_literal_ | PAREN_OPEN add_or_subtract_expr_ PAREN_CLOSE)
 
+set_ ::= SET list_of_items TO TRUE {pin=1 methods=[isStatic subprogramName]}
 call_ ::= CALL identifier_or_string_ [USING IDENTIFIER] {pin=1 methods=[isStatic subprogramName]}
 
 private replacing_ ::= REPLACING (replacing_by_ [COMMA])+ {pin=1}
@@ -252,6 +256,7 @@ private all_ ::= all (null_|zero_|space_|low_value_|high_value_|quote_|STRING|IN
 
 private list_of_items_or_literals ::=  <<list item_or_literal_>>
 private list_of_items_or_numbers ::=  <<list item_or_number_literal_>>
+private list_of_literals ::=  <<list literal_>>
 private list_of_items ::=  <<list item>>
 private meta list ::= <<item>>? ([COMMA] <<item>>)*
 

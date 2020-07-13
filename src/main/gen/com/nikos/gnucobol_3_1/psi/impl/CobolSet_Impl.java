@@ -8,17 +8,17 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static com.nikos.gnucobol_3_1.psi.CobolTypes.*;
+import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.nikos.gnucobol_3_1.psi.*;
-import java.util.Collection;
 
-public class CobolConditionalItemDecl_Impl extends CobolItemDecl_Impl implements CobolConditionalItemDecl_ {
+public class CobolSet_Impl extends ASTWrapperPsiElement implements CobolSet_ {
 
-  public CobolConditionalItemDecl_Impl(@NotNull ASTNode node) {
+  public CobolSet_Impl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull CobolVisitor visitor) {
-    visitor.visitConditionalItemDecl_(this);
+    visitor.visitSet_(this);
   }
 
   public void accept(@NotNull PsiElementVisitor visitor) {
@@ -28,19 +28,8 @@ public class CobolConditionalItemDecl_Impl extends CobolItemDecl_Impl implements
 
   @Override
   @NotNull
-  public CobolItemNameDecl_ getItemNameDecl_() {
-    return findNotNullChildByClass(CobolItemNameDecl_.class);
-  }
-
-  @Override
-  @NotNull
-  public List<CobolLiteral_> getLiteral_List() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, CobolLiteral_.class);
-  }
-
-  @Override
-  public Collection<CobolLiteral_> trueIf() {
-    return CobolPsiImplUtil.trueIf(this);
+  public List<CobolItemUsage_> getItemUsage_List() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, CobolItemUsage_.class);
   }
 
 }
