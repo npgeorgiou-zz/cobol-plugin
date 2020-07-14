@@ -1,19 +1,19 @@
-{
-  parserClass="com.nikos.gnucobol_3_1.parser.CobolParser"
-
-  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
-
-  psiClassPrefix="Cobol"
-  psiImplClassSuffix="Impl"
-  psiPackage="com.nikos.gnucobol_3_1.psi"
-  psiImplPackage="com.nikos.gnucobol_3_1.psi.impl"
-
-  elementTypeHolderClass="com.nikos.gnucobol_3_1.psi.CobolTypes"
-  elementTypeClass="com.nikos.gnucobol_3_1.psi.CobolElementType"
-  tokenTypeClass="com.nikos.gnucobol_3_1.psi.CobolTokenType"
-
-  psiImplUtilClass="com.nikos.gnucobol_3_1.psi.impl.CobolPsiImplUtil"
-}
+//{
+//  parserClass="com.nikos.gnucobol_3_1.parser.CobolParser"
+//
+//  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+//
+//  psiClassPrefix="Cobol"
+//  psiImplClassSuffix="Impl"
+//  psiPackage="com.nikos.gnucobol_3_1.psi"
+//  psiImplPackage="com.nikos.gnucobol_3_1.psi.impl"
+//
+//  elementTypeHolderClass="com.nikos.gnucobol_3_1.psi.CobolTypes"
+//  elementTypeClass="com.nikos.gnucobol_3_1.psi.CobolElementType"
+//  tokenTypeClass="com.nikos.gnucobol_3_1.psi.CobolTokenType"
+//
+//  psiImplUtilClass="com.nikos.gnucobol_3_1.psi.impl.CobolPsiImplUtil"
+//}
 
 {
   tokens = [
@@ -285,3 +285,5 @@ private list_of_items ::=  <<list item>>
 private meta list ::= <<item>> ([COMMA] <<item>>)*
 
 private not_dot ::= !DOT
+
+

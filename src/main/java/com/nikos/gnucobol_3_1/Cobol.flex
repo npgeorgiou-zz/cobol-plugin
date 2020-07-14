@@ -142,12 +142,20 @@ IDENTIFIER = ([:jletterdigit:])+ (- | [:jletterdigit:])* ([:jletterdigit:])+
 
     "positive"                {return CobolTypes.POSITIVE;}
     "negative"                {return CobolTypes.NEGATIVE;}
-    "not"                     {return CobolTypes.NOT;}
 
     "if"                      {return CobolTypes.IF;}
     "else"                    {return CobolTypes.ELSE;}
     "then"                    {return CobolTypes.THEN;}
     "end-if"                  {return CobolTypes.END_IF;}
+
+    "not"                     {return CobolTypes.NOT;}
+    "equal"                   {return CobolTypes.EQUAL;}
+    "greater"                 {return CobolTypes.GREATER;}
+    "less"                    {return CobolTypes.LESS;}
+    "than"                    {return CobolTypes.THAN;}
+
+    "and"                     {return CobolTypes.AND;}
+    "or"                      {return CobolTypes.OR;}
 
     {IDENTIFIER}              {return CobolTypes.IDENTIFIER;}
 }

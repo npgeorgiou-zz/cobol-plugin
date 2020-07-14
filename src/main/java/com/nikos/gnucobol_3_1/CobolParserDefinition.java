@@ -48,6 +48,24 @@ public class CobolParserDefinition implements ParserDefinition {
             CobolTypes.LINKAGE_SECTION
     );
 
+    public static final TokenSet PARENTHESES = TokenSet.create(
+        CobolTypes.PAREN_OPEN,
+        CobolTypes.PAREN_CLOSE
+    );
+
+    public static final TokenSet OPERATORS = TokenSet.create(
+        CobolTypes.EQUALS_OP,
+        CobolTypes.POWER_OP,
+        CobolTypes.ADD_OP,
+        CobolTypes.SUBTRACT_OP,
+        CobolTypes.MULTIPLY_OP,
+        CobolTypes.DIVIDE_OP,
+        CobolTypes.MORE_OP,
+        CobolTypes.MORE_EQUAL_OP,
+        CobolTypes.LESS_OP,
+        CobolTypes.LESS_EQUAL_OP
+    );
+
     public static final TokenSet KEYWORDS = TokenSet.create(
             CobolTypes.PIC,
             CobolTypes.VALUE,
@@ -95,7 +113,13 @@ public class CobolParserDefinition implements ParserDefinition {
             CobolTypes.ELSE,
             CobolTypes.THEN,
             CobolTypes.END_IF,
-            CobolTypes.NOT
+            CobolTypes.NOT,
+            CobolTypes.AND,
+            CobolTypes.OR,
+            CobolTypes.EQUAL,
+            CobolTypes.GREATER,
+            CobolTypes.LESS,
+            CobolTypes.THAN
     );
 
     public static final TokenSet CONCEPTUAL_DATA_ITEMS = TokenSet.create(

@@ -19,6 +19,10 @@ public class CobolColorSettingsPage implements ColorSettingsPage {
             new AttributesDescriptor("Comment", CobolSyntaxHighlighter.COMMENT_STYLE),
 
             new AttributesDescriptor("Dot", CobolSyntaxHighlighter.DOT_STYLE),
+            new AttributesDescriptor("Comma", CobolSyntaxHighlighter.COMMA_STYLE),
+            new AttributesDescriptor("Parentheses", CobolSyntaxHighlighter.PARENTHESES_STYLE),
+            new AttributesDescriptor("Operators", CobolSyntaxHighlighter.OPERATOR_STYLE),
+
             new AttributesDescriptor("Headers - Division header", CobolSyntaxHighlighter.DIVISION_HEADER_STYLE),
             new AttributesDescriptor("Headers - Section header", CobolSyntaxHighlighter.SECTION_HEADER_STYLE),
             new AttributesDescriptor("Headers - Division paragraphs", CobolSyntaxHighlighter.DIVISION_PARAGRAPHS_STYLE),
@@ -72,6 +76,7 @@ public class CobolColorSettingsPage implements ColorSettingsPage {
                 "                01 response pic 9(1).\n" +
                 "    procedure division using response.\n" +
                 "        move 5 to response.\n" +
+                "        compute response = (5 + 6) ** 2.\n" +
                 "    end program aNumber.\n" +
                 "\n" +
                 "end program helloWorld.\n";

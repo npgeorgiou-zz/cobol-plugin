@@ -22,7 +22,11 @@ public class CobolSyntaxHighlighter extends SyntaxHighlighterBase {
     public static final TextAttributesKey NUMBER_STYLE = createTextAttributesKey("COBOL_DIGIT", DefaultLanguageHighlighterColors.NUMBER);
 
     public static final TextAttributesKey COMMENT_STYLE = createTextAttributesKey("COBOL_COMMENT", DefaultLanguageHighlighterColors.LINE_COMMENT);
+
     public static final TextAttributesKey DOT_STYLE = createTextAttributesKey("COBOL_DOT", DefaultLanguageHighlighterColors.SEMICOLON);
+    public static final TextAttributesKey COMMA_STYLE = createTextAttributesKey("COBOL_COMMA", DefaultLanguageHighlighterColors.COMMA);
+    public static final TextAttributesKey PARENTHESES_STYLE = createTextAttributesKey("COBOL_PARENTHESES", DefaultLanguageHighlighterColors.BRACES);
+    public static final TextAttributesKey OPERATOR_STYLE = createTextAttributesKey("COBOL_OPERATOR", DefaultLanguageHighlighterColors.OPERATION_SIGN);
 
     public static final TextAttributesKey DIVISION_HEADER_STYLE = createTextAttributesKey("COBOL_DIVISION_HEADER", DefaultLanguageHighlighterColors.PREDEFINED_SYMBOL);
     public static final TextAttributesKey DIVISION_PARAGRAPHS_STYLE = createTextAttributesKey("COBOL_DIVISION_PARAGRAPHS", DefaultLanguageHighlighterColors.PREDEFINED_SYMBOL);
@@ -48,10 +52,13 @@ public class CobolSyntaxHighlighter extends SyntaxHighlighterBase {
         fillMap(ATTRIBUTES, CobolParserDefinition.NUMBER_LITERALS, NUMBER_STYLE);
         fillMap(ATTRIBUTES, CobolParserDefinition.CONCEPTUAL_DATA_ITEMS, CONCEPTUAL_DATA_ITEMS_STYLE);
         fillMap(ATTRIBUTES, CobolParserDefinition.FIGURATIVE_CONSTANTS, FIGURATIVE_CONSTANTS_STYLE);
+        fillMap(ATTRIBUTES, CobolParserDefinition.PARENTHESES, PARENTHESES_STYLE);
+        fillMap(ATTRIBUTES, CobolParserDefinition.OPERATORS, OPERATOR_STYLE);
 
         fillMap(ATTRIBUTES, STRING_STYLE, CobolTypes.STRING);
         fillMap(ATTRIBUTES, COMMENT_STYLE, CobolParserDefinition.COMMENT);
         fillMap(ATTRIBUTES, DOT_STYLE, CobolTypes.DOT);
+        fillMap(ATTRIBUTES, COMMA_STYLE, CobolTypes.COMMA);
         fillMap(ATTRIBUTES, IDENTIFIER_STYLE, CobolTypes.IDENTIFIER);
         fillMap(ATTRIBUTES, BAD_CHARACTER_STYLE, TokenType.BAD_CHARACTER);
     }
