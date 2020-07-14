@@ -57,6 +57,10 @@ IDENTIFIER = ([:jletterdigit:])+ (- | [:jletterdigit:])* ([:jletterdigit:])+
     "-"                       {return CobolTypes.SUBTRACT_OP;}
     "*"                       {return CobolTypes.MULTIPLY_OP;}
     "/"                       {return CobolTypes.DIVIDE_OP;}
+    ">"                       {return CobolTypes.MORE_OP;}
+    ">="                      {return CobolTypes.MORE_EQUAL_OP;}
+    "<"                       {return CobolTypes.LESS_OP;}
+    "<="                      {return CobolTypes.LESS_EQUAL_OP;}
 
     "identification division" {return CobolTypes.IDENTIFICATION_DIVISION;}
     "program-id"              {return CobolTypes.PROGRAM_ID;}
@@ -135,6 +139,15 @@ IDENTIFIER = ([:jletterdigit:])+ (- | [:jletterdigit:])* ([:jletterdigit:])+
     "renames"                 {return CobolTypes.RENAMES;}
     "through"                 {return CobolTypes.THROUGH;}
     "thru"                    {return CobolTypes.THROUGH;}
+
+    "positive"                {return CobolTypes.POSITIVE;}
+    "negative"                {return CobolTypes.NEGATIVE;}
+    "not"                     {return CobolTypes.NOT;}
+
+    "if"                      {return CobolTypes.IF;}
+    "else"                    {return CobolTypes.ELSE;}
+    "then"                    {return CobolTypes.THEN;}
+    "end-if"                  {return CobolTypes.END_IF;}
 
     {IDENTIFIER}              {return CobolTypes.IDENTIFIER;}
 }

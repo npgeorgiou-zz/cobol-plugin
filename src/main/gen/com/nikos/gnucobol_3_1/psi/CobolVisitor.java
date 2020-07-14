@@ -27,6 +27,14 @@ public class CobolVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
+  public void visitCondition_(@NotNull CobolCondition_ o) {
+    visitPsiElement(o);
+  }
+
+  public void visitConditionPart(@NotNull CobolConditionPart o) {
+    visitPsiElement(o);
+  }
+
   public void visitConditionalItemDecl_(@NotNull CobolConditionalItemDecl_ o) {
     visitItemDecl_(o);
   }
@@ -59,6 +67,14 @@ public class CobolVisitor extends PsiElementVisitor {
     visitItemDecl_(o);
   }
 
+  public void visitElse_(@NotNull CobolElse_ o) {
+    visitPsiElement(o);
+  }
+
+  public void visitElseIf(@NotNull CobolElseIf o) {
+    visitPsiElement(o);
+  }
+
   public void visitEndProgram_(@NotNull CobolEndProgram_ o) {
     visitPsiElement(o);
   }
@@ -76,6 +92,10 @@ public class CobolVisitor extends PsiElementVisitor {
   }
 
   public void visitIdentifierOrString_(@NotNull CobolIdentifierOrString_ o) {
+    visitPsiElement(o);
+  }
+
+  public void visitIf_(@NotNull CobolIf_ o) {
     visitPsiElement(o);
   }
 
@@ -128,6 +148,14 @@ public class CobolVisitor extends PsiElementVisitor {
   }
 
   public void visitMultiply_(@NotNull CobolMultiply_ o) {
+    visitPsiElement(o);
+  }
+
+  public void visitNonParenthesisCondition(@NotNull CobolNonParenthesisCondition o) {
+    visitPsiElement(o);
+  }
+
+  public void visitParenthesisCondition(@NotNull CobolParenthesisCondition o) {
     visitPsiElement(o);
   }
 

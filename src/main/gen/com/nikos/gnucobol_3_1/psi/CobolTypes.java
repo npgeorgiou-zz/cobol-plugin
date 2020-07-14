@@ -14,6 +14,8 @@ public interface CobolTypes {
   IElementType CALL_ = new CobolElementType("CALL_");
   IElementType COMPUTE_ = new CobolElementType("COMPUTE_");
   IElementType CONDITIONAL_ITEM_DECL_ = new CobolElementType("CONDITIONAL_ITEM_DECL_");
+  IElementType CONDITION_ = new CobolElementType("CONDITION_");
+  IElementType CONDITION_PART = new CobolElementType("CONDITION_PART");
   IElementType COPY_ = new CobolElementType("COPY_");
   IElementType DATA_DIVISION_ = new CobolElementType("DATA_DIVISION_");
   IElementType DATE_COMPILED_ = new CobolElementType("DATE_COMPILED_");
@@ -21,11 +23,14 @@ public interface CobolTypes {
   IElementType DISPLAY_ = new CobolElementType("DISPLAY_");
   IElementType DIVIDE_ = new CobolElementType("DIVIDE_");
   IElementType ELEMENTARY_ITEM_DECL_ = new CobolElementType("ELEMENTARY_ITEM_DECL_");
+  IElementType ELSE_ = new CobolElementType("ELSE_");
+  IElementType ELSE_IF = new CobolElementType("ELSE_IF");
   IElementType END_PROGRAM_ = new CobolElementType("END_PROGRAM_");
   IElementType ENVIRONMENT_DIVISION_ = new CobolElementType("ENVIRONMENT_DIVISION_");
   IElementType GROUP_ITEM_DECL_ = new CobolElementType("GROUP_ITEM_DECL_");
   IElementType IDENTIFICATION_DIVISION_ = new CobolElementType("IDENTIFICATION_DIVISION_");
   IElementType IDENTIFIER_OR_STRING_ = new CobolElementType("IDENTIFIER_OR_STRING_");
+  IElementType IF_ = new CobolElementType("IF_");
   IElementType INITIALIZE_ = new CobolElementType("INITIALIZE_");
   IElementType INSTALLATION_ = new CobolElementType("INSTALLATION_");
   IElementType ITEM_DECL_ = new CobolElementType("ITEM_DECL_");
@@ -39,6 +44,8 @@ public interface CobolTypes {
   IElementType LS_SECTION_ = new CobolElementType("LS_SECTION_");
   IElementType MOVE_ = new CobolElementType("MOVE_");
   IElementType MULTIPLY_ = new CobolElementType("MULTIPLY_");
+  IElementType NON_PARENTHESIS_CONDITION = new CobolElementType("NON_PARENTHESIS_CONDITION");
+  IElementType PARENTHESIS_CONDITION = new CobolElementType("PARENTHESIS_CONDITION");
   IElementType PROCEDURE_DIVISION_ = new CobolElementType("PROCEDURE_DIVISION_");
   IElementType PROGRAM_ = new CobolElementType("PROGRAM_");
   IElementType PROGRAM_ID_ = new CobolElementType("PROGRAM_ID_");
@@ -56,8 +63,11 @@ public interface CobolTypes {
   IElementType ADD = new CobolTokenType("ADD");
   IElementType ADD_OP = new CobolTokenType("ADD_OP");
   IElementType ALL = new CobolTokenType("all");
-  IElementType ALPHABETIC = new CobolTokenType("ALPHABETIC");
+  IElementType ALPHABETIC = new CobolTokenType("alphabetic");
+  IElementType ALPHABETIC_LOWER = new CobolTokenType("alphabetic-lower");
+  IElementType ALPHABETIC_UPPER = new CobolTokenType("alphabetic-upper");
   IElementType ALPHANUMERIC = new CobolTokenType("ALPHANUMERIC");
+  IElementType AND = new CobolTokenType("and");
   IElementType AUTHOR = new CobolTokenType("AUTHOR");
   IElementType BY = new CobolTokenType("BY");
   IElementType CALL = new CobolTokenType("CALL");
@@ -77,33 +87,46 @@ public interface CobolTypes {
   IElementType DIVIDE = new CobolTokenType("DIVIDE");
   IElementType DIVIDE_OP = new CobolTokenType("DIVIDE_OP");
   IElementType DOT = new CobolTokenType("DOT");
+  IElementType ELSE = new CobolTokenType("else");
   IElementType END = new CobolTokenType("END");
+  IElementType END_IF = new CobolTokenType("end-if");
   IElementType ENVIRONMENT_DIVISION = new CobolTokenType("ENVIRONMENT_DIVISION");
+  IElementType EQUAL = new CobolTokenType("equal");
   IElementType EQUALS_OP = new CobolTokenType("EQUALS_OP");
   IElementType FLOAT = new CobolTokenType("FLOAT");
   IElementType FROM = new CobolTokenType("FROM");
   IElementType GIVING = new CobolTokenType("GIVING");
+  IElementType GREATER = new CobolTokenType("greater");
   IElementType HIGH_VALUE = new CobolTokenType("high-value");
   IElementType HIGH_VALUES = new CobolTokenType("high-values");
   IElementType IDENTIFICATION_DIVISION = new CobolTokenType("IDENTIFICATION_DIVISION");
   IElementType IDENTIFIER = new CobolTokenType("IDENTIFIER");
+  IElementType IF = new CobolTokenType("if");
   IElementType IN = new CobolTokenType("IN");
   IElementType INITIALIZE = new CobolTokenType("INITIALIZE");
   IElementType INSTALLATION = new CobolTokenType("INSTALLATION");
   IElementType INTEGER = new CobolTokenType("INTEGER");
   IElementType INTO = new CobolTokenType("INTO");
   IElementType IS = new CobolTokenType("IS");
+  IElementType LESS = new CobolTokenType("less");
+  IElementType LESS_EQUAL_OP = new CobolTokenType("LESS_EQUAL_OP");
+  IElementType LESS_OP = new CobolTokenType("LESS_OP");
   IElementType LINKAGE_SECTION = new CobolTokenType("LINKAGE_SECTION");
   IElementType LOCAL_STORAGE_SECTION = new CobolTokenType("LOCAL_STORAGE_SECTION");
   IElementType LOW_VALUE = new CobolTokenType("low-value");
   IElementType LOW_VALUES = new CobolTokenType("low-values");
+  IElementType MORE_EQUAL_OP = new CobolTokenType("MORE_EQUAL_OP");
+  IElementType MORE_OP = new CobolTokenType("MORE_OP");
   IElementType MOVE = new CobolTokenType("MOVE");
   IElementType MULTIPLY = new CobolTokenType("MULTIPLY");
   IElementType MULTIPLY_OP = new CobolTokenType("MULTIPLY_OP");
+  IElementType NEGATIVE = new CobolTokenType("negative");
+  IElementType NOT = new CobolTokenType("not");
   IElementType NULL = new CobolTokenType("null");
   IElementType NULLS = new CobolTokenType("nulls");
-  IElementType NUMERIC = new CobolTokenType("NUMERIC");
+  IElementType NUMERIC = new CobolTokenType("numeric");
   IElementType OF = new CobolTokenType("OF");
+  IElementType OR = new CobolTokenType("or");
   IElementType PAREN_CLOSE = new CobolTokenType("PAREN_CLOSE");
   IElementType PAREN_OPEN = new CobolTokenType("PAREN_OPEN");
   IElementType PIC = new CobolTokenType("PIC");
@@ -113,6 +136,7 @@ public interface CobolTypes {
   IElementType PIC_TYPE_DECIMAL_NUMERIC = new CobolTokenType("PIC_TYPE_DECIMAL_NUMERIC");
   IElementType PIC_TYPE_NUMERIC = new CobolTokenType("PIC_TYPE_NUMERIC");
   IElementType PIC_TYPE_SIGNED_NUMERIC = new CobolTokenType("PIC_TYPE_SIGNED_NUMERIC");
+  IElementType POSITIVE = new CobolTokenType("positive");
   IElementType POWER_OP = new CobolTokenType("POWER_OP");
   IElementType PROCEDURE_DIVISION = new CobolTokenType("PROCEDURE_DIVISION");
   IElementType PROGRAM = new CobolTokenType("PROGRAM");
@@ -130,6 +154,8 @@ public interface CobolTypes {
   IElementType STRING = new CobolTokenType("STRING");
   IElementType SUBTRACT = new CobolTokenType("SUBTRACT");
   IElementType SUBTRACT_OP = new CobolTokenType("SUBTRACT_OP");
+  IElementType THAN = new CobolTokenType("than");
+  IElementType THEN = new CobolTokenType("then");
   IElementType THROUGH = new CobolTokenType("THROUGH");
   IElementType TIME = new CobolTokenType("TIME");
   IElementType TO = new CobolTokenType("TO");
@@ -164,6 +190,12 @@ public interface CobolTypes {
       else if (type == CONDITIONAL_ITEM_DECL_) {
         return new CobolConditionalItemDecl_Impl(node);
       }
+      else if (type == CONDITION_) {
+        return new CobolCondition_Impl(node);
+      }
+      else if (type == CONDITION_PART) {
+        return new CobolConditionPartImpl(node);
+      }
       else if (type == COPY_) {
         return new CobolCopy_Impl(node);
       }
@@ -185,6 +217,12 @@ public interface CobolTypes {
       else if (type == ELEMENTARY_ITEM_DECL_) {
         return new CobolElementaryItemDecl_Impl(node);
       }
+      else if (type == ELSE_) {
+        return new CobolElse_Impl(node);
+      }
+      else if (type == ELSE_IF) {
+        return new CobolElseIfImpl(node);
+      }
       else if (type == END_PROGRAM_) {
         return new CobolEndProgram_Impl(node);
       }
@@ -199,6 +237,9 @@ public interface CobolTypes {
       }
       else if (type == IDENTIFIER_OR_STRING_) {
         return new CobolIdentifierOrString_Impl(node);
+      }
+      else if (type == IF_) {
+        return new CobolIf_Impl(node);
       }
       else if (type == INITIALIZE_) {
         return new CobolInitialize_Impl(node);
@@ -238,6 +279,12 @@ public interface CobolTypes {
       }
       else if (type == MULTIPLY_) {
         return new CobolMultiply_Impl(node);
+      }
+      else if (type == NON_PARENTHESIS_CONDITION) {
+        return new CobolNonParenthesisConditionImpl(node);
+      }
+      else if (type == PARENTHESIS_CONDITION) {
+        return new CobolParenthesisConditionImpl(node);
       }
       else if (type == PROCEDURE_DIVISION_) {
         return new CobolProcedureDivision_Impl(node);

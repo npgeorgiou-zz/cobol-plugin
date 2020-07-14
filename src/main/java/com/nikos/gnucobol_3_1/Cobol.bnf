@@ -43,6 +43,10 @@
     SUBTRACT_OP = '-'
     MULTIPLY_OP = '*'
     DIVIDE_OP = '/'
+    MORE_OP = '>'
+    MORE_EQUAL_OP = '>='
+    LESS_OP = '<'
+    LESS_EQUAL_OP = '<='
 
     ACCEPT = 'accept'
     FROM = 'from'
@@ -198,9 +202,30 @@ private using_ ::= USING IDENTIFIER+
 
 
 sentence_ ::= (statement_+ DOT) {pin=1}
-statement_ ::= (accept_|display_|initialize_|move_|add_|subtract_|multiply_|divide_|compute_|call_|set_) {pin=1}
+statement_ ::= (if_|accept_|display_|initialize_|move_|add_|subtract_|multiply_|divide_|compute_|call_|set_) {pin=1}
 
 item_name_decl_ ::= IDENTIFIER {methods=[setName getName getNameIdentifier]}
+// TODO: Define TO & IS inline.
+
+
+if_ ::= if condition_ [then] statement_+ [else statement_+] [end-if]            {pin=1}
+else_if ::= else if condition_ [then] statement_+
+else_ ::= else statement_+
+
+
+condition_ ::= condition_part {(and|or) condition_part}*
+condition_part ::= not* (parenthesis_condition|non_parenthesis_condition)
+
+parenthesis_condition ::= PAREN_OPEN condition_ PAREN_CLOSE
+non_parenthesis_condition ::= (type_condition_|sign_condition_|comp_condition_|truth_condition_)
+
+private truth_condition_	::= [not] item
+private type_condition_ ::= item_or_literal_ [IS] [not] (numeric|alphabetic|alphabetic-lower|alphabetic-upper)
+private sign_condition_	::= item_or_literal_ [IS] [not] (positive|negative|zero_)
+private comp_condition_ ::= add_or_subtract_expr_ [IS] [not] (equals_|greater_|less_) add_or_subtract_expr_
+private equals_ ::= (equal [TO] | '=')
+private greater_ ::= (greater [than] [or equal [TO]] |MORE_OP|MORE_EQUAL_OP)
+private less_ ::= (less [than] [or equal [TO]] |LESS_OP|LESS_EQUAL_OP)
 
 accept_ ::= ACCEPT item [FROM (IDENTIFIER|DATE [YYYYMMDD]|DAY [YYYYDDD]|DAY-OF-WEEK|TIME)] {pin=1}
 display_ ::= DISPLAY list_of_items_or_literals {pin=1}

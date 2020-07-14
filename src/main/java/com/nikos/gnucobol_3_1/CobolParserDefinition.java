@@ -90,7 +90,12 @@ public class CobolParserDefinition implements ParserDefinition {
             CobolTypes.CALL,
             CobolTypes.USING,
             CobolTypes.SET,
-            CobolTypes.TRUE
+            CobolTypes.TRUE,
+            CobolTypes.IF,
+            CobolTypes.ELSE,
+            CobolTypes.THEN,
+            CobolTypes.END_IF,
+            CobolTypes.NOT
     );
 
     public static final TokenSet CONCEPTUAL_DATA_ITEMS = TokenSet.create(

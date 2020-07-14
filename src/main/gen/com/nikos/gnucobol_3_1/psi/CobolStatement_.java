@@ -26,6 +26,9 @@ public interface CobolStatement_ extends PsiElement {
   CobolDivide_ getDivide_();
 
   @Nullable
+  CobolIf_ getIf_();
+
+  @Nullable
   CobolInitialize_ getInitialize_();
 
   @Nullable
