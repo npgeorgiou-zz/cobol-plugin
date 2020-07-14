@@ -9,7 +9,6 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static com.nikos.gnucobol_3_1.psi.CobolTypes.*;
 import com.nikos.gnucobol_3_1.psi.*;
-import java.util.Collection;
 
 public class CobolConditionalItemDecl_Impl extends CobolItemDecl_Impl implements CobolConditionalItemDecl_ {
 
@@ -27,9 +26,9 @@ public class CobolConditionalItemDecl_Impl extends CobolItemDecl_Impl implements
   }
 
   @Override
-  @NotNull
+  @Nullable
   public CobolItemNameDecl_ getItemNameDecl_() {
-    return findNotNullChildByClass(CobolItemNameDecl_.class);
+    return findChildByClass(CobolItemNameDecl_.class);
   }
 
   @Override
@@ -39,7 +38,7 @@ public class CobolConditionalItemDecl_Impl extends CobolItemDecl_Impl implements
   }
 
   @Override
-  public Collection<CobolLiteral_> trueIf() {
+  public List<CobolLiteral_> trueIf() {
     return CobolPsiImplUtil.trueIf(this);
   }
 

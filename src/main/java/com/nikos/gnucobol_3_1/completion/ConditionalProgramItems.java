@@ -4,6 +4,7 @@ import com.intellij.codeInsight.completion.CompletionParameters;
 import com.intellij.codeInsight.completion.CompletionResultSet;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
+import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.PlatformIcons;
@@ -46,10 +47,18 @@ class ConditionalProgramItems extends CobolCompletionProvider {
     }
 
     private String typeDescription(CobolConditionalItemDecl_ item) {
-        return "Conditional item: " + Util.implode(
-            item.trueIf().stream().map(it -> Util.unquote(it.getText())).collect(Collectors.toList()),
-            "|"
-        );
+        String trueIf;
+
+        if (item.getNode().findChildByType(CobolTypes.THROUGH) != null) {
+            trueIf = item.trueIf().get(0).getText() + ".."  + item.trueIf().get(1).getText();
+        } else {
+            trueIf = Util.implode(
+                item.trueIf().stream().map(it -> it.getText()).collect(Collectors.toList()),
+                "|"
+            );
+        }
+
+        return "Conditional item: " + trueIf;
     }
 
 }

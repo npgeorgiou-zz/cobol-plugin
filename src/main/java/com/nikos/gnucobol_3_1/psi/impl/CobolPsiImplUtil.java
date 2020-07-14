@@ -295,7 +295,7 @@ public class CobolPsiImplUtil {
         return (CobolItemDecl_) nameDecl.getParent();
     }
 
-    public static Collection<CobolLiteral_> trueIf(CobolConditionalItemDecl_ itemDeclaration) {
+    public static List<CobolLiteral_> trueIf(CobolConditionalItemDecl_ itemDeclaration) {
         return itemDeclaration.getLiteral_List();
     }
 

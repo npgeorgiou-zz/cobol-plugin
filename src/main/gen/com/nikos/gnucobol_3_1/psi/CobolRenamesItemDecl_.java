@@ -7,7 +7,7 @@ import com.intellij.psi.PsiElement;
 
 public interface CobolRenamesItemDecl_ extends CobolItemDecl_ {
 
-  @NotNull
+  @Nullable
   CobolItemNameDecl_ getItemNameDecl_();
 
   @NotNull

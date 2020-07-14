@@ -1,6 +1,7 @@
 package com.nikos.gnucobol_3_1;
 
 import java.util.Collection;
+import java.util.List;
 
 public class Util {
     public static String quote(String string) {
@@ -27,7 +28,7 @@ public class Util {
         return string.substring(length);
     }
 
-    public static String implode(Collection<String> strings, String glue) {
+    public static String implode(List<String> strings, String glue) {
         String result = "";
         for (String string : strings) {
             result += string + glue;

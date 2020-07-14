@@ -381,14 +381,15 @@ public class CobolParser implements PsiParser, LightPsiParser {
   // '88' item_name_decl_ VALUE (literal_ THROUGH literal_ | list_of_literals)
   public static boolean conditional_item_decl_(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "conditional_item_decl_")) return false;
-    boolean r;
+    boolean r, p;
     Marker m = enter_section_(b, l, _NONE_, CONDITIONAL_ITEM_DECL_, "<conditional item decl>");
     r = consumeToken(b, "88");
-    r = r && item_name_decl_(b, l + 1);
-    r = r && consumeToken(b, VALUE);
-    r = r && conditional_item_decl__3(b, l + 1);
-    exit_section_(b, l, m, r, false, null);
-    return r;
+    p = r; // pin = 1
+    r = r && report_error_(b, item_name_decl_(b, l + 1));
+    r = p && report_error_(b, consumeToken(b, VALUE)) && r;
+    r = p && conditional_item_decl__3(b, l + 1) && r;
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
   }
 
   // literal_ THROUGH literal_ | list_of_literals
@@ -1829,16 +1830,17 @@ public class CobolParser implements PsiParser, LightPsiParser {
   // '66' item_name_decl_ RENAMES item_usage_ [THROUGH] item_usage_
   public static boolean renames_item_decl_(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "renames_item_decl_")) return false;
-    boolean r;
+    boolean r, p;
     Marker m = enter_section_(b, l, _NONE_, RENAMES_ITEM_DECL_, "<renames item decl>");
     r = consumeToken(b, "66");
-    r = r && item_name_decl_(b, l + 1);
-    r = r && consumeToken(b, RENAMES);
-    r = r && item_usage_(b, l + 1);
-    r = r && renames_item_decl__4(b, l + 1);
-    r = r && item_usage_(b, l + 1);
-    exit_section_(b, l, m, r, false, null);
-    return r;
+    p = r; // pin = 1
+    r = r && report_error_(b, item_name_decl_(b, l + 1));
+    r = p && report_error_(b, consumeToken(b, RENAMES)) && r;
+    r = p && report_error_(b, item_usage_(b, l + 1)) && r;
+    r = p && report_error_(b, renames_item_decl__4(b, l + 1)) && r;
+    r = p && item_usage_(b, l + 1) && r;
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
   }
 
   // [THROUGH]

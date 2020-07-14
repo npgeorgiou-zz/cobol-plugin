@@ -26,9 +26,9 @@ public class CobolRenamesItemDecl_Impl extends CobolItemDecl_Impl implements Cob
   }
 
   @Override
-  @NotNull
+  @Nullable
   public CobolItemNameDecl_ getItemNameDecl_() {
-    return findNotNullChildByClass(CobolItemNameDecl_.class);
+    return findChildByClass(CobolItemNameDecl_.class);
   }
 
   @Override

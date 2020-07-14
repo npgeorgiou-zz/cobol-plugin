@@ -12,6 +12,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.nikos.gnucobol_3_1.colors.CobolSyntaxHighlighter;
+import com.nikos.gnucobol_3_1.inspections.CobolRenames;
 import com.nikos.gnucobol_3_1.psi.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -63,6 +64,11 @@ public class CobolAnnotator implements Annotator {
                 if (item.level() == 77) {
                     checkNonContiguousItem(item, holder);
                 }
+            }
+
+            if (element instanceof CobolRenamesItemDecl_) {
+                CobolRenamesItemDecl_ item = (CobolRenamesItemDecl_) element;
+                checkRenames(item, holder);
             }
 
             return;
@@ -239,6 +245,20 @@ public class CobolAnnotator implements Annotator {
         }
     }
 
+    private void checkRenames(CobolRenamesItemDecl_ declaration, AnnotationHolder holder) {
+        List<CobolItemUsage_> renamedItems = declaration.getItemUsage_List();
+
+        PsiElement renameStart = renamedItems.get(0).getReference().resolve();
+        if (renameStart == null) return;
+
+        PsiElement renameEnd = renamedItems.get(1).getReference().resolve();
+        if (renameEnd == null) return;
+
+        if (renameStart.equals(renameEnd)) {
+            error(declaration, "Renamed start and end items cant be the same.", holder);
+        }
+    }
+
     private void checkNonContiguousItem(CobolElementaryItemDecl_ declaration, AnnotationHolder holder) {
         CobolItemDecl_ nextItem = CobolUtil.nextSibling(
             declaration,
@@ -248,7 +268,7 @@ public class CobolAnnotator implements Annotator {
 
         if (nextItem == null) return;
 
-        if (nextItem.level() != 1 && nextItem.level() != 77) {
+        if (nextItem.level() != 1 && nextItem.level() != 77 && nextItem.level() != 88) {
             error(declaration, "Non-contiguous item can only be at first level.", holder);
         }
     }

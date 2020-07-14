@@ -172,8 +172,8 @@ item_decl_ ::= (elementary_item_decl_ | renames_item_decl_ | conditional_item_de
 group_item_decl_ ::= item_level_decl_ item_name_decl_ {extends="item_decl_" methods=[children]}
 elementary_item_decl_ ::= item_level_decl_ item_name_decl_ (normal_| redefines_)
                                                            {extends="item_decl_" methods=[redefines type isSigned hasDecimals length decimalLength initialValue]}
-renames_item_decl_ ::=  '66' item_name_decl_ RENAMES item_usage_ [THROUGH] item_usage_ {extends="item_decl_"}
-conditional_item_decl_ ::=  '88' item_name_decl_ VALUE (literal_ THROUGH literal_ | list_of_literals) {extends="item_decl_" methods=[trueIf]}
+renames_item_decl_ ::=  '66' item_name_decl_ RENAMES item_usage_ [THROUGH] item_usage_ {pin=1 extends="item_decl_"}
+conditional_item_decl_ ::=  '88' item_name_decl_ VALUE (literal_ THROUGH literal_ | list_of_literals) {pin=1 extends="item_decl_" methods=[trueIf]}
 
 private normal_ ::= item_type_decl_ [item_value_decl_]
 private redefines_ ::=  REDEFINES item_usage_ item_type_decl_
