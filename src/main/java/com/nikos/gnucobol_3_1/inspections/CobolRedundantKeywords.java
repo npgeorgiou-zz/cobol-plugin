@@ -13,15 +13,6 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 public class CobolRedundantKeywords extends CobolInspectionBase {
-
-//    @Override
-//    protected void checkFile(CobolFile file, ProblemsHolder holder) {
-//        Collection<PsiElement> all = PsiTreeUtil.findChildrenOfType(file, PsiElement.class);
-//
-//        redundantKeyword(CobolTypes.DATA, all, holder);
-//        redundantKeyword(CobolTypes.IS, all, holder);
-//    }
-
     @NotNull
     protected CobolVisitor buildCobolVisitor(@NotNull final ProblemsHolder holder, @NotNull LocalInspectionToolSession session) {
         return new CobolVisitor() {
