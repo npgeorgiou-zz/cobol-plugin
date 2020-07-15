@@ -388,9 +388,7 @@ public class CobolCompletionContributor extends CompletionContributor {
         Node setStatement = new RootNode(CobolSet_.class,
             psiElement(CobolTypes.SET),
             new RepeatingNode(
-                listOfItems(),
-                null,
-                new ConditionalProgramItems(),
+                listOfItems(), null, new ConditionalProgramItems(),
                 new Node(
                     psiElement(CobolTypes.TO), new Keywords(true, "to"),
                     new Node(
@@ -452,6 +450,10 @@ public class CobolCompletionContributor extends CompletionContributor {
 
     private PsiElementPattern<PsiElement, PsiElementPattern.Capture<PsiElement>> psiElementIsOnLineBeginning() {
         return psiElement().with(new OnLineBeginning(""));
+    }
+
+    private PsiElementPattern<PsiElement, PsiElementPattern.Capture<PsiElement>> isInsideIfScope() {
+        return psiElement().with(new isInsideIfScope());
     }
 
     private PsiElementPattern.Capture<PsiElement> afterAny(IElementType... types) {
@@ -604,6 +606,29 @@ class StatementAlreadyHas extends PatternCondition<PsiElement> {
             }
 
             if (types.contains(prevLeaf.getNode().getElementType())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}
+
+class isInsideIfScope extends PatternCondition<PsiElement> {
+    public isInsideIfScope() {
+        super("Statement already has Element of that type");
+    }
+
+    @Override
+    public boolean accepts(@NotNull PsiElement element, ProcessingContext context) {
+        PsiElement prevLeaf = element;
+        while ((prevLeaf = PsiTreeUtil.prevLeaf(prevLeaf)) != null) {
+
+            if (prevLeaf.getNode().getElementType() == CobolTypes.DOT) {
+                return false;
+            }
+
+            if (prevLeaf.getNode().getElementType() == CobolTypes.IF) {
                 return true;
             }
         }

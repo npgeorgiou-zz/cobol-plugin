@@ -68,6 +68,7 @@ public class CobolParserDefinition implements ParserDefinition {
 
     public static final TokenSet KEYWORDS = TokenSet.create(
             CobolTypes.PIC,
+            CobolTypes.IS,
             CobolTypes.VALUE,
             CobolTypes.REDEFINES,
             CobolTypes.RENAMES,
@@ -119,7 +120,9 @@ public class CobolParserDefinition implements ParserDefinition {
             CobolTypes.EQUAL,
             CobolTypes.GREATER,
             CobolTypes.LESS,
-            CobolTypes.THAN
+            CobolTypes.THAN,
+            CobolTypes.POSITIVE,
+            CobolTypes.NEGATIVE
     );
 
     public static final TokenSet CONCEPTUAL_DATA_ITEMS = TokenSet.create(
