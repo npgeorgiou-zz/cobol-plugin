@@ -1,19 +1,19 @@
-//{
-//  parserClass="com.nikos.gnucobol_3_1.parser.CobolParser"
-//
-//  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
-//
-//  psiClassPrefix="Cobol"
-//  psiImplClassSuffix="Impl"
-//  psiPackage="com.nikos.gnucobol_3_1.psi"
-//  psiImplPackage="com.nikos.gnucobol_3_1.psi.impl"
-//
-//  elementTypeHolderClass="com.nikos.gnucobol_3_1.psi.CobolTypes"
-//  elementTypeClass="com.nikos.gnucobol_3_1.psi.CobolElementType"
-//  tokenTypeClass="com.nikos.gnucobol_3_1.psi.CobolTokenType"
-//
-//  psiImplUtilClass="com.nikos.gnucobol_3_1.psi.impl.CobolPsiImplUtil"
-//}
+{
+  parserClass="com.nikos.gnucobol_3_1.parser.CobolParser"
+
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+  psiClassPrefix="Cobol"
+  psiImplClassSuffix="Impl"
+  psiPackage="com.nikos.gnucobol_3_1.psi"
+  psiImplPackage="com.nikos.gnucobol_3_1.psi.impl"
+
+  elementTypeHolderClass="com.nikos.gnucobol_3_1.psi.CobolTypes"
+  elementTypeClass="com.nikos.gnucobol_3_1.psi.CobolElementType"
+  tokenTypeClass="com.nikos.gnucobol_3_1.psi.CobolTokenType"
+
+  psiImplUtilClass="com.nikos.gnucobol_3_1.psi.impl.CobolPsiImplUtil"
+}
 
 {
   tokens = [
@@ -208,10 +208,11 @@ item_name_decl_ ::= IDENTIFIER {methods=[setName getName getNameIdentifier]}
 // TODO: Define TO & IS inline.
 
 
-if_ ::= if condition_ [then] statement_+ [else statement_+] [end-if]            {pin=1}
-condition_ ::= condition_part {(and|or) condition_part}*
-private condition_part ::= not* (parenthesis_condition|non_parenthesis_condition)
-private parenthesis_condition ::= PAREN_OPEN condition_ PAREN_CLOSE
+if_ ::= if composite_condition [then] statement_+ [else statement_+] [end-if]            {pin=1}
+
+private composite_condition ::= condition_ ((and|or) condition_)*
+condition_ ::= not*  (parenthesis_condition|non_parenthesis_condition)
+private parenthesis_condition ::= PAREN_OPEN composite_condition PAREN_CLOSE
 private non_parenthesis_condition ::= (type_condition_|sign_condition_|comp_condition_|truth_condition_)
 
 private truth_condition_	::= [not] item

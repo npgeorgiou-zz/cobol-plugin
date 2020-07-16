@@ -11,14 +11,14 @@ import static com.nikos.gnucobol_3_1.psi.CobolTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.nikos.gnucobol_3_1.psi.*;
 
-public class CobolIf_Impl extends ASTWrapperPsiElement implements CobolIf_ {
+public class CobolIfConditionOperandImpl extends ASTWrapperPsiElement implements CobolIfConditionOperand {
 
-  public CobolIf_Impl(@NotNull ASTNode node) {
+  public CobolIfConditionOperandImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull CobolVisitor visitor) {
-    visitor.visitIf_(this);
+    visitor.visitIfConditionOperand(this);
   }
 
   public void accept(@NotNull PsiElementVisitor visitor) {
@@ -28,14 +28,8 @@ public class CobolIf_Impl extends ASTWrapperPsiElement implements CobolIf_ {
 
   @Override
   @NotNull
-  public List<CobolCondition_> getCondition_List() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, CobolCondition_.class);
-  }
-
-  @Override
-  @NotNull
-  public List<CobolStatement_> getStatement_List() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, CobolStatement_.class);
+  public List<CobolItemUsage_> getItemUsage_List() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, CobolItemUsage_.class);
   }
 
 }

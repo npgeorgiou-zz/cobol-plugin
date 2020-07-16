@@ -113,7 +113,7 @@ public class CobolElementFactory {
         System.out.println(text);
         CobolSentence_ sentence = (CobolSentence_) createProgram(project, "foo", text).getProcedureDivision_().getLastChild();
         CobolIf_ ifStatement = (CobolIf_) sentence.getStatement_List().get(0).getFirstChild();
-        return ifStatement.getCondition_();
+        return ifStatement.getCondition_List().get(0);
     }
 
     public static CobolFile createFile(Project project, String text) {

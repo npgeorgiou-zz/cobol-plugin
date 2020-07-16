@@ -362,16 +362,16 @@ public class CobolParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // add_or_subtract_expr_ [IS] [not] (equals_|greater_|less_) add_or_subtract_expr_
+  // if_condition_operand [IS] [not] (equals_|greater_|less_) if_condition_operand
   static boolean comp_condition_(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "comp_condition_")) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = add_or_subtract_expr_(b, l + 1);
+    r = if_condition_operand(b, l + 1);
     r = r && comp_condition__1(b, l + 1);
     r = r && comp_condition__2(b, l + 1);
     r = r && comp_condition__3(b, l + 1);
-    r = r && add_or_subtract_expr_(b, l + 1);
+    r = r && if_condition_operand(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
@@ -401,6 +401,49 @@ public class CobolParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // condition_ ((and|or) condition_)*
+  static boolean composite_condition(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "composite_condition")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = condition_(b, l + 1);
+    r = r && composite_condition_1(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // ((and|or) condition_)*
+  private static boolean composite_condition_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "composite_condition_1")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!composite_condition_1_0(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "composite_condition_1", c)) break;
+    }
+    return true;
+  }
+
+  // (and|or) condition_
+  private static boolean composite_condition_1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "composite_condition_1_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = composite_condition_1_0_0(b, l + 1);
+    r = r && condition_(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // and|or
+  private static boolean composite_condition_1_0_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "composite_condition_1_0_0")) return false;
+    boolean r;
+    r = consumeToken(b, AND);
+    if (!r) r = consumeToken(b, OR);
+    return r;
+  }
+
+  /* ********************************************************** */
   // COMPUTE list_of_items EQUALS_OP add_or_subtract_expr_
   public static boolean compute_(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "compute_")) return false;
@@ -417,74 +460,31 @@ public class CobolParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // condition_part {(and|or) condition_part}*
+  // not*  (parenthesis_condition|non_parenthesis_condition)
   public static boolean condition_(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "condition_")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _COLLAPSE_, CONDITION_, "<condition>");
-    r = condition_part(b, l + 1);
+    r = condition__0(b, l + 1);
     r = r && condition__1(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
 
-  // {(and|or) condition_part}*
-  private static boolean condition__1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "condition__1")) return false;
-    while (true) {
-      int c = current_position_(b);
-      if (!condition__1_0(b, l + 1)) break;
-      if (!empty_element_parsed_guard_(b, "condition__1", c)) break;
-    }
-    return true;
-  }
-
-  // (and|or) condition_part
-  private static boolean condition__1_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "condition__1_0")) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = condition__1_0_0(b, l + 1);
-    r = r && condition_part(b, l + 1);
-    exit_section_(b, m, null, r);
-    return r;
-  }
-
-  // and|or
-  private static boolean condition__1_0_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "condition__1_0_0")) return false;
-    boolean r;
-    r = consumeToken(b, AND);
-    if (!r) r = consumeToken(b, OR);
-    return r;
-  }
-
-  /* ********************************************************** */
-  // not* (parenthesis_condition|non_parenthesis_condition)
-  static boolean condition_part(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "condition_part")) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = condition_part_0(b, l + 1);
-    r = r && condition_part_1(b, l + 1);
-    exit_section_(b, m, null, r);
-    return r;
-  }
-
   // not*
-  private static boolean condition_part_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "condition_part_0")) return false;
+  private static boolean condition__0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "condition__0")) return false;
     while (true) {
       int c = current_position_(b);
       if (!consumeToken(b, NOT)) break;
-      if (!empty_element_parsed_guard_(b, "condition_part_0", c)) break;
+      if (!empty_element_parsed_guard_(b, "condition__0", c)) break;
     }
     return true;
   }
 
   // parenthesis_condition|non_parenthesis_condition
-  private static boolean condition_part_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "condition_part_1")) return false;
+  private static boolean condition__1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "condition__1")) return false;
     boolean r;
     r = parenthesis_condition(b, l + 1);
     if (!r) r = non_parenthesis_condition(b, l + 1);
@@ -833,13 +833,14 @@ public class CobolParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // equal [TO] | '='
+  // equal [TO] | EQUALS_OP
   static boolean equals_(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "equals_")) return false;
+    if (!nextTokenIs(b, "", EQUAL, EQUALS_OP)) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = equals__0(b, l + 1);
-    if (!r) r = consumeToken(b, "=");
+    if (!r) r = consumeToken(b, EQUALS_OP);
     exit_section_(b, m, null, r);
     return r;
   }
@@ -1037,7 +1038,7 @@ public class CobolParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // if condition_ [then] statement_+ [else statement_+] [end-if]
+  // if composite_condition [then] statement_+ [else statement_+] [end-if]
   public static boolean if_(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "if_")) return false;
     if (!nextTokenIs(b, IF)) return false;
@@ -1045,7 +1046,7 @@ public class CobolParser implements PsiParser, LightPsiParser {
     Marker m = enter_section_(b, l, _NONE_, IF_, null);
     r = consumeToken(b, IF);
     p = r; // pin = 1
-    r = r && report_error_(b, condition_(b, l + 1));
+    r = r && report_error_(b, composite_condition(b, l + 1));
     r = p && report_error_(b, if__2(b, l + 1)) && r;
     r = p && report_error_(b, if__3(b, l + 1)) && r;
     r = p && report_error_(b, if__4(b, l + 1)) && r;
@@ -1114,6 +1115,17 @@ public class CobolParser implements PsiParser, LightPsiParser {
     if (!recursion_guard_(b, l, "if__5")) return false;
     consumeToken(b, END_IF);
     return true;
+  }
+
+  /* ********************************************************** */
+  // add_or_subtract_expr_
+  public static boolean if_condition_operand(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "if_condition_operand")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, IF_CONDITION_OPERAND, "<if condition operand>");
+    r = add_or_subtract_expr_(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
   }
 
   /* ********************************************************** */
@@ -1995,14 +2007,14 @@ public class CobolParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // PAREN_OPEN condition_ PAREN_CLOSE
+  // PAREN_OPEN composite_condition PAREN_CLOSE
   static boolean parenthesis_condition(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "parenthesis_condition")) return false;
     if (!nextTokenIs(b, PAREN_OPEN)) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, PAREN_OPEN);
-    r = r && condition_(b, l + 1);
+    r = r && composite_condition(b, l + 1);
     r = r && consumeToken(b, PAREN_CLOSE);
     exit_section_(b, m, null, r);
     return r;
@@ -2373,12 +2385,12 @@ public class CobolParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // add_or_subtract_expr_ [IS] [not] (positive|negative|zero_)
+  // if_condition_operand [IS] [not] (positive|negative|zero_)
   static boolean sign_condition_(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "sign_condition_")) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = add_or_subtract_expr_(b, l + 1);
+    r = if_condition_operand(b, l + 1);
     r = r && sign_condition__1(b, l + 1);
     r = r && sign_condition__2(b, l + 1);
     r = r && sign_condition__3(b, l + 1);
@@ -2576,12 +2588,12 @@ public class CobolParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // add_or_subtract_expr_ [IS] [not] (numeric|alphabetic|alphabetic-lower|alphabetic-upper)
+  // if_condition_operand [IS] [not] (numeric|alphabetic|alphabetic-lower|alphabetic-upper)
   static boolean type_condition_(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "type_condition_")) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = add_or_subtract_expr_(b, l + 1);
+    r = if_condition_operand(b, l + 1);
     r = r && type_condition__1(b, l + 1);
     r = r && type_condition__2(b, l + 1);
     r = r && type_condition__3(b, l + 1);

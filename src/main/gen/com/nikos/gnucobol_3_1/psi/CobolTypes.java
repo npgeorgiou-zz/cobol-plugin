@@ -28,6 +28,7 @@ public interface CobolTypes {
   IElementType IDENTIFICATION_DIVISION_ = new CobolElementType("IDENTIFICATION_DIVISION_");
   IElementType IDENTIFIER_OR_STRING_ = new CobolElementType("IDENTIFIER_OR_STRING_");
   IElementType IF_ = new CobolElementType("IF_");
+  IElementType IF_CONDITION_OPERAND = new CobolElementType("IF_CONDITION_OPERAND");
   IElementType INITIALIZE_ = new CobolElementType("INITIALIZE_");
   IElementType INSTALLATION_ = new CobolElementType("INSTALLATION_");
   IElementType ITEM_DECL_ = new CobolElementType("ITEM_DECL_");
@@ -226,6 +227,9 @@ public interface CobolTypes {
       }
       else if (type == IF_) {
         return new CobolIf_Impl(node);
+      }
+      else if (type == IF_CONDITION_OPERAND) {
+        return new CobolIfConditionOperandImpl(node);
       }
       else if (type == INITIALIZE_) {
         return new CobolInitialize_Impl(node);

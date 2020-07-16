@@ -87,6 +87,10 @@ public class CobolVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
+  public void visitIfConditionOperand(@NotNull CobolIfConditionOperand o) {
+    visitPsiElement(o);
+  }
+
   public void visitInitialize_(@NotNull CobolInitialize_ o) {
     visitPsiElement(o);
   }

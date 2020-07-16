@@ -5,12 +5,9 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface CobolIf_ extends PsiElement {
+public interface CobolIfConditionOperand extends PsiElement {
 
   @NotNull
-  List<CobolCondition_> getCondition_List();
-
-  @NotNull
-  List<CobolStatement_> getStatement_List();
+  List<CobolItemUsage_> getItemUsage_List();
 
 }
