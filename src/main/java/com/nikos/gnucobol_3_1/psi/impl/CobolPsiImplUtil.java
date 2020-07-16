@@ -74,6 +74,13 @@ public class CobolPsiImplUtil {
         return name;
     }
 
+    public static CobolItemDecl_ declaration(CobolItemUsage_ name) {
+        CobolItemNameDecl_ nameDecl = (CobolItemNameDecl_) name.getReference().resolve();
+        if (nameDecl == null) return null;
+
+        return (CobolItemDecl_) nameDecl.getParent();
+    }
+
     public static Collection<PsiElement> parentChain(CobolItemUsage_ itemUsage, Collection<PsiElement> chain, boolean recursive) {
         Collection<PsiElement> currentChain = new ArrayList<>();
 
@@ -288,11 +295,10 @@ public class CobolPsiImplUtil {
         if (redefines == null) return null;
 
         CobolItemUsage_ itemUsage = (CobolItemUsage_) redefines.getPsi().getNextSibling().getNextSibling();
-        CobolItemNameDecl_ nameDecl = (CobolItemNameDecl_) itemUsage.getReference().resolve();
+        CobolItemDecl_ declaration =  itemUsage.declaration();
+        if (declaration == null) return null;
 
-        if (nameDecl == null) return null;
-
-        return (CobolItemDecl_) nameDecl.getParent();
+        return declaration;
     }
 
     public static List<CobolLiteral_> trueIf(CobolConditionalItemDecl_ itemDeclaration) {

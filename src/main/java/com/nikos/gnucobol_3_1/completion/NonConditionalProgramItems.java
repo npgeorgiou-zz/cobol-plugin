@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-class NonConditionalProgramItems extends CobolCompletionProvider {
+class NonConditionalProgramItems extends ProgramItems {
     @Override
     public void addCompletions(@NotNull CompletionParameters parameters, @NotNull ProcessingContext context, @NotNull CompletionResultSet resultSet) {
         PsiElement typed = parameters.getPosition();
@@ -31,39 +31,4 @@ class NonConditionalProgramItems extends CobolCompletionProvider {
             resultSet.addElement(createLookupElement(var));
         }
     }
-
-    protected LookupElement createLookupElement(CobolItemDecl_ var) {
-        return LookupElementBuilder
-                   .create(var.name())
-                   .withIcon(PlatformIcons.VARIABLE_ICON)
-                   .withTypeText(typeDescription(var))
-                   .withTypeIconRightAligned(true);
-    }
-
-    private String typeDescription(CobolItemDecl_ var) {
-        if (var instanceof CobolGroupItemDecl_ || var instanceof CobolRenamesItemDecl_) {
-            return "Group item";
-        }
-
-        CobolElementaryItemDecl_ elementaryDecl = (CobolElementaryItemDecl_) var;
-        String type = elementaryDecl.type();
-
-        if (type.equals(CobolUtil.ALPHA)) {
-            return "alpha(" + elementaryDecl.length() + ")";
-        }
-
-        if (type.equals(CobolUtil.ALPHANUMERIC)) {
-            return "alphanumeric(" + elementaryDecl.length() + ")";
-        }
-
-        if (type.equals(CobolUtil.NUMERIC)) {
-            return
-                (elementaryDecl.isSigned() ? "signed " : "") +
-                ("numeric(" + elementaryDecl.length() + ")") +
-                (elementaryDecl.hasDecimals() ? "(" + elementaryDecl.decimalLength() + ")" : "");
-        }
-
-        return "";
-    }
-
 }

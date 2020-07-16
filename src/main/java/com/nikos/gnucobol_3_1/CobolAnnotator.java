@@ -12,8 +12,8 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.nikos.gnucobol_3_1.colors.CobolSyntaxHighlighter;
-import com.nikos.gnucobol_3_1.inspections.CobolRenames;
 import com.nikos.gnucobol_3_1.psi.*;
+import com.nikos.gnucobol_3_1.psi.impl.CobolItemNameDecl_Impl;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ public class CobolAnnotator implements Annotator {
         Annotation annotation = holder.createErrorAnnotation(element, text);
         annotation.setTextAttributes(CobolSyntaxHighlighter.BAD_CHARACTER_STYLE);
 
-        for (IntentionAction fix: fixes) {
+        for (IntentionAction fix : fixes) {
             annotation.registerFix(fix);
         }
     }
@@ -102,13 +102,12 @@ public class CobolAnnotator implements Annotator {
             return;
         }
 
-
         if (element instanceof CobolAdd_) {
             CobolAdd_ add = (CobolAdd_) element;
 
             if (
                 add.getNode().findChildByType(CobolTypes.CORRESPONDING) != null
-                || add.getNode().findChildByType(CobolTypes.CORR) != null
+                    || add.getNode().findChildByType(CobolTypes.CORR) != null
             ) {
                 notGroupOperands(add.getItemUsage_List(), holder);
             } else {
@@ -124,7 +123,7 @@ public class CobolAnnotator implements Annotator {
 
             if (
                 subtract.getNode().findChildByType(CobolTypes.CORRESPONDING) != null
-                || subtract.getNode().findChildByType(CobolTypes.CORR) != null
+                    || subtract.getNode().findChildByType(CobolTypes.CORR) != null
             ) {
                 notGroupOperands(subtract.getItemUsage_List(), holder);
             } else {
@@ -157,6 +156,13 @@ public class CobolAnnotator implements Annotator {
             CobolCompute_ compute = (CobolCompute_) element;
 
             notElementaryOperands(compute.getItemUsage_List(), holder);
+            return;
+        }
+
+        if (element instanceof CobolIf_) {
+            CobolIf_ ifStatement = (CobolIf_) element;
+
+            truthConditionWithoutConditionalItem(ifStatement, holder);
             return;
         }
 
@@ -275,10 +281,10 @@ public class CobolAnnotator implements Annotator {
 
     private void notGroupOperands(List<CobolItemUsage_> itemUsages, AnnotationHolder holder) {
         for (CobolItemUsage_ usage : itemUsages) {
-            PsiElement reference = usage.getReference().resolve();
-            if (reference == null) continue;
+            CobolItemDecl_ declaration = usage.declaration();
+            if (declaration == null) continue;
 
-            if (!(reference.getParent() instanceof CobolGroupItemDecl_)) {
+            if (!(declaration instanceof CobolGroupItemDecl_)) {
                 error(usage, "Not a group item.", holder);
             }
         }
@@ -286,14 +292,14 @@ public class CobolAnnotator implements Annotator {
 
     private void notElementaryOperands(List<CobolItemUsage_> itemUsages, AnnotationHolder holder) {
         for (CobolItemUsage_ usage : itemUsages) {
-            PsiElement reference = usage.getReference().resolve();
-            if (reference == null) continue;
+            CobolItemDecl_ declaration = usage.declaration();
+            if (declaration == null) continue;
 
             if (PsiTreeUtil.prevVisibleLeaf(usage).getNode().getElementType() == CobolTypes.OF) {
                 continue;
             }
 
-            if (!(reference.getParent() instanceof CobolElementaryItemDecl_)) {
+            if (!(declaration instanceof CobolElementaryItemDecl_)) {
                 error(usage, "Not an elementary item.", holder);
             }
         }
@@ -301,14 +307,12 @@ public class CobolAnnotator implements Annotator {
 
     private void notNumericItems(Collection<CobolItemUsage_> itemUsages, AnnotationHolder holder) {
         for (CobolItemUsage_ usage : itemUsages) {
-            PsiElement reference = usage.getReference().resolve();
-            if (reference == null) continue;
-
-            CobolItemDecl_ declaration = (CobolItemDecl_) reference.getParent();
+            CobolItemDecl_ declaration = usage.declaration();
+            if (declaration == null) continue;
 
             if (!(declaration instanceof CobolElementaryItemDecl_)) continue;
 
-            String type = ((CobolElementaryItemDecl_) reference.getParent()).type();
+            String type = ((CobolElementaryItemDecl_) declaration).type();
 
             // Can happen if a user types pic after a group item, then it becomes an Elementary item
             // but it still has no type. Maybe a better approach is to have only one Item and play with
@@ -329,14 +333,14 @@ public class CobolAnnotator implements Annotator {
 
     private void conditionalOperands(Collection<CobolItemUsage_> itemUsages, AnnotationHolder holder) {
         for (CobolItemUsage_ usage : itemUsages) {
-            PsiElement reference = usage.getReference().resolve();
-            if (reference == null) continue;
+            CobolItemDecl_ declaration = usage.declaration();
+            if (declaration == null) continue;
 
             if (PsiTreeUtil.prevVisibleLeaf(usage).getNode().getElementType() == CobolTypes.OF) {
                 continue;
             }
 
-            if (reference.getParent() instanceof CobolConditionalItemDecl_) {
+            if (declaration instanceof CobolConditionalItemDecl_) {
                 error(usage, "Conditional item not allowed here.", holder);
             }
         }
@@ -347,14 +351,12 @@ public class CobolAnnotator implements Annotator {
 
         if (typedGroupItem == null) return;
 
-        CobolItemNameDecl_ itemNameDecl = (CobolItemNameDecl_) itemUsage.getReference().resolve();
-
-        if (itemNameDecl == null) {
+        CobolItemDecl_ declaration = itemUsage.declaration();
+        if (declaration == null) {
             return;
         }
 
-        CobolItemDecl_ itemDecl = (CobolItemDecl_) itemNameDecl.getParent();
-        CobolItemDecl_ parent = itemDecl.parent();
+        CobolItemDecl_ parent = declaration.parent();
 
         if (parent == null) {
             error(itemUsage.getNextSibling().getNextSibling(), "Item has no parent.", holder);
@@ -559,6 +561,22 @@ public class CobolAnnotator implements Annotator {
         if (!program.name().equals(endProgramName)) {
             error(endProgram, "End program is different than program id.", holder);
         }
+    }
+
+    private void truthConditionWithoutConditionalItem(CobolIf_ ifStatement, AnnotationHolder holder) {
+        if (ifStatement.getCondition_List().isEmpty()) return;
+
+        CobolCondition_ condition = ifStatement.getCondition_List().get(0);
+
+        if (condition.getChildren().length > 1) return;
+        if (!(condition.getFirstChild() instanceof CobolItemUsage_)) return;
+
+        CobolItemDecl_ decl = ((CobolItemUsage_) condition.getFirstChild()).declaration();
+        if (decl == null) return;
+
+        if (decl instanceof CobolConditionalItemDecl_) return;
+
+        error(condition, "Truth checks need a conditional item.", holder);
     }
 }
 

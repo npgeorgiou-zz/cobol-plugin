@@ -18,7 +18,7 @@ import java.util.Collection;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
-class ConditionalProgramItems extends CobolCompletionProvider {
+class ConditionalProgramItems extends ProgramItems {
     @Override
     public void addCompletions(@NotNull CompletionParameters parameters, @NotNull ProcessingContext context, @NotNull CompletionResultSet resultSet) {
         PsiElement typed = parameters.getPosition();
@@ -37,28 +37,4 @@ class ConditionalProgramItems extends CobolCompletionProvider {
             resultSet.addElement(createLookupElement(item));
         }
     }
-
-    protected LookupElement createLookupElement(CobolConditionalItemDecl_ item) {
-        return LookupElementBuilder
-                   .create(item.name())
-                   .withIcon(PlatformIcons.VARIABLE_ICON)
-                   .withTypeText(typeDescription(item))
-                   .withTypeIconRightAligned(true);
-    }
-
-    private String typeDescription(CobolConditionalItemDecl_ item) {
-        String trueIf;
-
-        if (item.getNode().findChildByType(CobolTypes.THROUGH) != null) {
-            trueIf = item.trueIf().get(0).getText() + ".."  + item.trueIf().get(1).getText();
-        } else {
-            trueIf = Util.implode(
-                item.trueIf().stream().map(it -> it.getText()).collect(Collectors.toList()),
-                "|"
-            );
-        }
-
-        return "Conditional item: " + trueIf;
-    }
-
 }

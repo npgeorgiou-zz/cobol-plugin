@@ -9,7 +9,7 @@ import com.nikos.gnucobol_3_1.psi.CobolItemDecl_;
 import com.nikos.gnucobol_3_1.psi.CobolProgram_;
 import org.jetbrains.annotations.NotNull;
 
-class ElementaryItems extends NonConditionalProgramItems {
+class ElementaryItems extends ProgramItems {
     @Override
     public void addCompletions(@NotNull CompletionParameters parameters, @NotNull ProcessingContext context, @NotNull CompletionResultSet resultSet) {
         PsiElement typed = parameters.getPosition();

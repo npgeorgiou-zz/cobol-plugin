@@ -9,8 +9,11 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.PlatformIcons;
 import com.intellij.util.ProcessingContext;
 import com.nikos.gnucobol_3_1.CobolUtil;
+import com.nikos.gnucobol_3_1.Util;
 import com.nikos.gnucobol_3_1.psi.*;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.stream.Collectors;
 
 class ProgramItems extends CobolCompletionProvider {
     @Override
@@ -21,8 +24,8 @@ class ProgramItems extends CobolCompletionProvider {
 
         if (program == null) return;
 
-        for (CobolItemDecl_ var : program.items()) {
-            resultSet.addElement(createLookupElement(var));
+        for (CobolItemDecl_ item : program.items()) {
+            resultSet.addElement(createLookupElement(item));
         }
     }
 
@@ -34,12 +37,28 @@ class ProgramItems extends CobolCompletionProvider {
                    .withTypeIconRightAligned(true);
     }
 
-    private String typeDescription(CobolItemDecl_ var) {
-        if (var instanceof CobolGroupItemDecl_) {
+    protected String typeDescription(CobolItemDecl_ item) {
+        if (item instanceof CobolGroupItemDecl_) {
             return "Group item";
         }
 
-        CobolElementaryItemDecl_ elementaryDecl = (CobolElementaryItemDecl_) var;
+        if (item instanceof CobolConditionalItemDecl_) {
+            CobolConditionalItemDecl_ conditionalItem = (CobolConditionalItemDecl_) item;
+            String trueIf;
+
+            if (conditionalItem.getNode().findChildByType(CobolTypes.THROUGH) != null) {
+                trueIf = conditionalItem.trueIf().get(0).getText() + ".."  + conditionalItem.trueIf().get(1).getText();
+            } else {
+                trueIf = Util.implode(
+                    conditionalItem.trueIf().stream().map(it -> it.getText()).collect(Collectors.toList()),
+                    "|"
+                );
+            }
+
+            return "Conditional item: " + trueIf;
+        }
+
+        CobolElementaryItemDecl_ elementaryDecl = (CobolElementaryItemDecl_) item;
         String type = elementaryDecl.type();
 
         if (type.equals(CobolUtil.ALPHA)) {

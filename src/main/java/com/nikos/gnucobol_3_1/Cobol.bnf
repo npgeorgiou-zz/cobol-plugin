@@ -259,7 +259,7 @@ private replacing_by_ ::= (ALPHABETIC|ALPHANUMERIC|NUMERIC) [DATA] BY item_or_li
 private item ::=  item_usage_ of_item_usage*
 private of_item_usage ::= (OF|IN) item_usage_ {pin=1}
 
-item_usage_ ::= IDENTIFIER {methods=[setName getReference typedGroupItem parentChain]}
+item_usage_ ::= IDENTIFIER {methods=[setName getReference declaration typedGroupItem parentChain]}
 
 identifier_or_string_ ::= (IDENTIFIER|STRING)
 private item_or_number_literal_ ::= (item|number_literal_)

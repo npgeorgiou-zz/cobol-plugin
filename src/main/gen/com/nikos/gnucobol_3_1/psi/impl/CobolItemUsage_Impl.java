@@ -38,6 +38,11 @@ public class CobolItemUsage_Impl extends ASTWrapperPsiElement implements CobolIt
   }
 
   @Override
+  public CobolItemDecl_ declaration() {
+    return CobolPsiImplUtil.declaration(this);
+  }
+
+  @Override
   public CobolItemUsage_ typedGroupItem(boolean recursive) {
     return CobolPsiImplUtil.typedGroupItem(this, recursive);
   }

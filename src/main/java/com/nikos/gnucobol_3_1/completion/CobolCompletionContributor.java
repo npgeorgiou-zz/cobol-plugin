@@ -192,7 +192,8 @@ public class CobolCompletionContributor extends CompletionContributor {
     public CobolCompletionContributor() {
         extend(CompletionType.BASIC, atStatementBeginning(), new Keywords(
             "accept", "call", "display", "initialize", "move",
-            "add", "subtract", "multiply", "divide", "compute")
+            "add", "subtract", "multiply", "divide", "compute",
+            "set")
         );
 
         extend(CompletionType.BASIC, atFileLevel(), new Combine(new ProgramSeed(), new Keywords("copy")));
@@ -645,17 +646,14 @@ class PreviousItemHasParent extends PatternCondition<PsiElement> {
 
     @Override
     public boolean accepts(@NotNull PsiElement element, ProcessingContext context) {
-        CobolItemUsage_ previousitemUsage = CobolUtil.previousItemUsage(element, true);
-        CobolItemNameDecl_ prevItemNameDecl = (CobolItemNameDecl_) previousitemUsage.getReference().resolve();
+        CobolItemUsage_ previousItemUsage = CobolUtil.previousItemUsage(element, true);
+        CobolItemDecl_ itemDecl = previousItemUsage.declaration();
 
-        if (prevItemNameDecl == null) {
+        if (itemDecl == null) {
             return false;
         }
 
-        CobolItemDecl_ itemDecl = (CobolItemDecl_) prevItemNameDecl.getParent();
-        CobolItemDecl_ parent = itemDecl.parent();
-
-        if (parent != null) {
+        if (itemDecl.parent() != null) {
             return true;
         }
 

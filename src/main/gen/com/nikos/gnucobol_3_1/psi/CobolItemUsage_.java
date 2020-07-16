@@ -12,6 +12,8 @@ public interface CobolItemUsage_ extends PsiElement {
 
   CobolItemNameReference getReference();
 
+  CobolItemDecl_ declaration();
+
   CobolItemUsage_ typedGroupItem(boolean recursive);
 
   Collection<PsiElement> parentChain(Collection<PsiElement> chain, boolean recursive);
