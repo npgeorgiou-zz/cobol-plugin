@@ -2,6 +2,7 @@ package com.nikos.gnucobol_3_1;
 
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.codeInsight.intention.impl.BaseIntentionAction;
+import com.intellij.lang.ASTNode;
 import com.intellij.lang.annotation.Annotation;
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
@@ -9,6 +10,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.nikos.gnucobol_3_1.colors.CobolSyntaxHighlighter;
@@ -17,6 +19,7 @@ import com.nikos.gnucobol_3_1.psi.impl.CobolItemNameDecl_Impl;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -85,8 +88,8 @@ public class CobolAnnotator implements Annotator {
         if (element instanceof CobolMove_) {
             CobolMove_ move = (CobolMove_) element;
             if (
-                move.getNode().findChildByType(CobolTypes.CORRESPONDING) != null
-                    || move.getNode().findChildByType(CobolTypes.CORR) != null
+            move.getNode().findChildByType(CobolTypes.CORRESPONDING) != null
+            || move.getNode().findChildByType(CobolTypes.CORR) != null
             ) {
                 notGroupOperands(move.getItemUsage_List(), holder);
             }
@@ -106,8 +109,8 @@ public class CobolAnnotator implements Annotator {
             CobolAdd_ add = (CobolAdd_) element;
 
             if (
-                add.getNode().findChildByType(CobolTypes.CORRESPONDING) != null
-                    || add.getNode().findChildByType(CobolTypes.CORR) != null
+            add.getNode().findChildByType(CobolTypes.CORRESPONDING) != null
+            || add.getNode().findChildByType(CobolTypes.CORR) != null
             ) {
                 notGroupOperands(add.getItemUsage_List(), holder);
             } else {
@@ -122,8 +125,8 @@ public class CobolAnnotator implements Annotator {
             CobolSubtract_ subtract = (CobolSubtract_) element;
 
             if (
-                subtract.getNode().findChildByType(CobolTypes.CORRESPONDING) != null
-                    || subtract.getNode().findChildByType(CobolTypes.CORR) != null
+            subtract.getNode().findChildByType(CobolTypes.CORRESPONDING) != null
+            || subtract.getNode().findChildByType(CobolTypes.CORR) != null
             ) {
                 notGroupOperands(subtract.getItemUsage_List(), holder);
             } else {
@@ -156,13 +159,6 @@ public class CobolAnnotator implements Annotator {
             CobolCompute_ compute = (CobolCompute_) element;
 
             notElementaryOperands(compute.getItemUsage_List(), holder);
-            return;
-        }
-
-        if (element instanceof CobolIf_) {
-            CobolIf_ ifStatement = (CobolIf_) element;
-
-            truthConditionWithoutConditionalItem(ifStatement, holder);
             return;
         }
 
@@ -229,21 +225,21 @@ public class CobolAnnotator implements Annotator {
         }
 
         CobolItemDecl_ previousSameLevelDecl = CobolUtil.previousSibling(
-            declaration,
-            (element) -> {
-                if (!(element instanceof CobolItemDecl_)) return false;
-                return ((CobolItemDecl_) element).level() < declaration.level();
-            },
-            (element) -> {
-                if (!(element instanceof CobolItemDecl_)) return false;
+        declaration,
+        (element) -> {
+            if (!(element instanceof CobolItemDecl_)) return false;
+            return ((CobolItemDecl_) element).level() < declaration.level();
+        },
+        (element) -> {
+            if (!(element instanceof CobolItemDecl_)) return false;
 
-                // Skip other redefinitions.
-                if (element instanceof CobolElementaryItemDecl_) {
-                    if (((CobolElementaryItemDecl_) element).redefines() != null) return false;
-                }
-
-                return ((CobolItemDecl_) element).level() == declaration.level();
+            // Skip other redefinitions.
+            if (element instanceof CobolElementaryItemDecl_) {
+                if (((CobolElementaryItemDecl_) element).redefines() != null) return false;
             }
+
+            return ((CobolItemDecl_) element).level() == declaration.level();
+        }
         );
 
         if (!declaration.redefines().equals(previousSameLevelDecl)) {
@@ -267,9 +263,9 @@ public class CobolAnnotator implements Annotator {
 
     private void checkNonContiguousItem(CobolElementaryItemDecl_ declaration, AnnotationHolder holder) {
         CobolItemDecl_ nextItem = CobolUtil.nextSibling(
-            declaration,
-            null,
-            (element) -> element instanceof CobolItemDecl_
+        declaration,
+        null,
+        (element) -> element instanceof CobolItemDecl_
         );
 
         if (nextItem == null) return;
@@ -386,8 +382,8 @@ public class CobolAnnotator implements Annotator {
         }
 
         Collection<CobolCopy_> copies = CobolUtil.traverseFilesAndCollect(
-            CobolUtil.mainFileFor(copy.getProject()),
-            file -> file.copies()
+        CobolUtil.mainFileFor(copy.getProject()),
+        file -> file.copies()
         );
 
         // Remove self.
@@ -416,9 +412,9 @@ public class CobolAnnotator implements Annotator {
         Collection<CobolProgram_> contributedFromCopy = copiedFile.allTypedAndCopiedPrograms();
 
         Collection<CobolProgram_> programsInAllOtherFiles = CobolUtil.mainFileFor(copy.getProject())
-                                                                .allTypedAndCopiedPrograms().stream()
-                                                                .filter(program -> !contributedFromCopy.contains(program))
-                                                                .collect(Collectors.toList());
+                                                            .allTypedAndCopiedPrograms().stream()
+                                                            .filter(program -> !contributedFromCopy.contains(program))
+                                                            .collect(Collectors.toList());
 
 
         for (CobolProgram_ fromCopy : contributedFromCopy) {
@@ -439,16 +435,16 @@ public class CobolAnnotator implements Annotator {
         Collection<CobolProgram_> contributedFromCopy = copiedFile.allTypedAndCopiedPrograms();
 
         Collection<CobolProgram_> programsInAllOtherFiles = CobolUtil.traverseFilesAndCollect(
-            CobolUtil.mainFileFor(copy.getProject()),
-            (f -> (f.equals(copiedFile)) ? new ArrayList<>() : f.allTypedPrograms())
+        CobolUtil.mainFileFor(copy.getProject()),
+        (f -> (f.equals(copiedFile)) ? new ArrayList<>() : f.allTypedPrograms())
         );
 
 
         Collection<String> staticCallTargets = programsInAllOtherFiles.stream()
-                                                   .flatMap(program -> program.calls().stream())
-                                                   .filter(call -> call.isStatic())
-                                                   .map(call -> call.subprogramName())
-                                                   .collect(Collectors.toList());
+                                               .flatMap(program -> program.calls().stream())
+                                               .filter(call -> call.isStatic())
+                                               .map(call -> call.subprogramName())
+                                               .collect(Collectors.toList());
 
         boolean isNotUsed = contributedFromCopy.stream().noneMatch(copiedProgram -> {
             return staticCallTargets.stream().anyMatch(staticCallTarget -> {
@@ -561,22 +557,6 @@ public class CobolAnnotator implements Annotator {
         if (!program.name().equals(endProgramName)) {
             error(endProgram, "End program is different than program id.", holder);
         }
-    }
-
-    private void truthConditionWithoutConditionalItem(CobolIf_ ifStatement, AnnotationHolder holder) {
-        if (ifStatement.getCondition_List().isEmpty()) return;
-
-        CobolCondition_ condition = ifStatement.getCondition_List().get(0);
-
-        if (condition.getChildren().length > 1) return;
-        if (!(condition.getFirstChild() instanceof CobolItemUsage_)) return;
-
-        CobolItemDecl_ decl = ((CobolItemUsage_) condition.getFirstChild()).declaration();
-        if (decl == null) return;
-
-        if (decl instanceof CobolConditionalItemDecl_) return;
-
-        error(condition, "Truth checks need a conditional item.", holder);
     }
 }
 
