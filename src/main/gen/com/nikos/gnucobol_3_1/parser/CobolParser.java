@@ -421,7 +421,7 @@ public class CobolParser implements PsiParser, LightPsiParser {
   public static boolean condition_(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "condition_")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, CONDITION_, "<condition>");
+    Marker m = enter_section_(b, l, _COLLAPSE_, CONDITION_, "<condition>");
     r = condition_part(b, l + 1);
     r = r && condition__1(b, l + 1);
     exit_section_(b, l, m, r, false, null);
@@ -461,13 +461,13 @@ public class CobolParser implements PsiParser, LightPsiParser {
 
   /* ********************************************************** */
   // not* (parenthesis_condition|non_parenthesis_condition)
-  public static boolean condition_part(PsiBuilder b, int l) {
+  static boolean condition_part(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "condition_part")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, CONDITION_PART, "<condition part>");
+    Marker m = enter_section_(b);
     r = condition_part_0(b, l + 1);
     r = r && condition_part_1(b, l + 1);
-    exit_section_(b, l, m, r, false, null);
+    exit_section_(b, m, null, r);
     return r;
   }
 
@@ -802,71 +802,6 @@ public class CobolParser implements PsiParser, LightPsiParser {
     boolean r;
     r = normal_(b, l + 1);
     if (!r) r = redefines_(b, l + 1);
-    return r;
-  }
-
-  /* ********************************************************** */
-  // else statement_+
-  public static boolean else_(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "else_")) return false;
-    if (!nextTokenIs(b, ELSE)) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = consumeToken(b, ELSE);
-    r = r && else__1(b, l + 1);
-    exit_section_(b, m, ELSE_, r);
-    return r;
-  }
-
-  // statement_+
-  private static boolean else__1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "else__1")) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = statement_(b, l + 1);
-    while (r) {
-      int c = current_position_(b);
-      if (!statement_(b, l + 1)) break;
-      if (!empty_element_parsed_guard_(b, "else__1", c)) break;
-    }
-    exit_section_(b, m, null, r);
-    return r;
-  }
-
-  /* ********************************************************** */
-  // else if condition_ [then] statement_+
-  public static boolean else_if(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "else_if")) return false;
-    if (!nextTokenIs(b, ELSE)) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = consumeTokens(b, 0, ELSE, IF);
-    r = r && condition_(b, l + 1);
-    r = r && else_if_3(b, l + 1);
-    r = r && else_if_4(b, l + 1);
-    exit_section_(b, m, ELSE_IF, r);
-    return r;
-  }
-
-  // [then]
-  private static boolean else_if_3(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "else_if_3")) return false;
-    consumeToken(b, THEN);
-    return true;
-  }
-
-  // statement_+
-  private static boolean else_if_4(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "else_if_4")) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = statement_(b, l + 1);
-    while (r) {
-      int c = current_position_(b);
-      if (!statement_(b, l + 1)) break;
-      if (!empty_element_parsed_guard_(b, "else_if_4", c)) break;
-    }
-    exit_section_(b, m, null, r);
     return r;
   }
 
@@ -1862,15 +1797,13 @@ public class CobolParser implements PsiParser, LightPsiParser {
 
   /* ********************************************************** */
   // type_condition_|sign_condition_|comp_condition_|truth_condition_
-  public static boolean non_parenthesis_condition(PsiBuilder b, int l) {
+  static boolean non_parenthesis_condition(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "non_parenthesis_condition")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, NON_PARENTHESIS_CONDITION, "<non parenthesis condition>");
     r = type_condition_(b, l + 1);
     if (!r) r = sign_condition_(b, l + 1);
     if (!r) r = comp_condition_(b, l + 1);
     if (!r) r = truth_condition_(b, l + 1);
-    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -2063,7 +1996,7 @@ public class CobolParser implements PsiParser, LightPsiParser {
 
   /* ********************************************************** */
   // PAREN_OPEN condition_ PAREN_CLOSE
-  public static boolean parenthesis_condition(PsiBuilder b, int l) {
+  static boolean parenthesis_condition(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "parenthesis_condition")) return false;
     if (!nextTokenIs(b, PAREN_OPEN)) return false;
     boolean r;
@@ -2071,7 +2004,7 @@ public class CobolParser implements PsiParser, LightPsiParser {
     r = consumeToken(b, PAREN_OPEN);
     r = r && condition_(b, l + 1);
     r = r && consumeToken(b, PAREN_CLOSE);
-    exit_section_(b, m, PARENTHESIS_CONDITION, r);
+    exit_section_(b, m, null, r);
     return r;
   }
 
@@ -2440,12 +2373,12 @@ public class CobolParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // item_or_literal_ [IS] [not] (positive|negative|zero_)
+  // add_or_subtract_expr_ [IS] [not] (positive|negative|zero_)
   static boolean sign_condition_(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "sign_condition_")) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = item_or_literal_(b, l + 1);
+    r = add_or_subtract_expr_(b, l + 1);
     r = r && sign_condition__1(b, l + 1);
     r = r && sign_condition__2(b, l + 1);
     r = r && sign_condition__3(b, l + 1);
@@ -2643,12 +2576,12 @@ public class CobolParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // item_or_literal_ [IS] [not] (numeric|alphabetic|alphabetic-lower|alphabetic-upper)
+  // add_or_subtract_expr_ [IS] [not] (numeric|alphabetic|alphabetic-lower|alphabetic-upper)
   static boolean type_condition_(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "type_condition_")) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = item_or_literal_(b, l + 1);
+    r = add_or_subtract_expr_(b, l + 1);
     r = r && type_condition__1(b, l + 1);
     r = r && type_condition__2(b, l + 1);
     r = r && type_condition__3(b, l + 1);

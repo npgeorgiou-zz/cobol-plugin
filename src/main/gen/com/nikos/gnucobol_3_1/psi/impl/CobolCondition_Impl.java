@@ -28,8 +28,14 @@ public class CobolCondition_Impl extends ASTWrapperPsiElement implements CobolCo
 
   @Override
   @NotNull
-  public List<CobolConditionPart> getConditionPartList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, CobolConditionPart.class);
+  public List<CobolCondition_> getCondition_List() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, CobolCondition_.class);
+  }
+
+  @Override
+  @NotNull
+  public List<CobolItemUsage_> getItemUsage_List() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, CobolItemUsage_.class);
   }
 
 }

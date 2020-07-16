@@ -15,7 +15,6 @@ public interface CobolTypes {
   IElementType COMPUTE_ = new CobolElementType("COMPUTE_");
   IElementType CONDITIONAL_ITEM_DECL_ = new CobolElementType("CONDITIONAL_ITEM_DECL_");
   IElementType CONDITION_ = new CobolElementType("CONDITION_");
-  IElementType CONDITION_PART = new CobolElementType("CONDITION_PART");
   IElementType COPY_ = new CobolElementType("COPY_");
   IElementType DATA_DIVISION_ = new CobolElementType("DATA_DIVISION_");
   IElementType DATE_COMPILED_ = new CobolElementType("DATE_COMPILED_");
@@ -23,8 +22,6 @@ public interface CobolTypes {
   IElementType DISPLAY_ = new CobolElementType("DISPLAY_");
   IElementType DIVIDE_ = new CobolElementType("DIVIDE_");
   IElementType ELEMENTARY_ITEM_DECL_ = new CobolElementType("ELEMENTARY_ITEM_DECL_");
-  IElementType ELSE_ = new CobolElementType("ELSE_");
-  IElementType ELSE_IF = new CobolElementType("ELSE_IF");
   IElementType END_PROGRAM_ = new CobolElementType("END_PROGRAM_");
   IElementType ENVIRONMENT_DIVISION_ = new CobolElementType("ENVIRONMENT_DIVISION_");
   IElementType GROUP_ITEM_DECL_ = new CobolElementType("GROUP_ITEM_DECL_");
@@ -44,8 +41,6 @@ public interface CobolTypes {
   IElementType LS_SECTION_ = new CobolElementType("LS_SECTION_");
   IElementType MOVE_ = new CobolElementType("MOVE_");
   IElementType MULTIPLY_ = new CobolElementType("MULTIPLY_");
-  IElementType NON_PARENTHESIS_CONDITION = new CobolElementType("NON_PARENTHESIS_CONDITION");
-  IElementType PARENTHESIS_CONDITION = new CobolElementType("PARENTHESIS_CONDITION");
   IElementType PROCEDURE_DIVISION_ = new CobolElementType("PROCEDURE_DIVISION_");
   IElementType PROGRAM_ = new CobolElementType("PROGRAM_");
   IElementType PROGRAM_ID_ = new CobolElementType("PROGRAM_ID_");
@@ -193,9 +188,6 @@ public interface CobolTypes {
       else if (type == CONDITION_) {
         return new CobolCondition_Impl(node);
       }
-      else if (type == CONDITION_PART) {
-        return new CobolConditionPartImpl(node);
-      }
       else if (type == COPY_) {
         return new CobolCopy_Impl(node);
       }
@@ -216,12 +208,6 @@ public interface CobolTypes {
       }
       else if (type == ELEMENTARY_ITEM_DECL_) {
         return new CobolElementaryItemDecl_Impl(node);
-      }
-      else if (type == ELSE_) {
-        return new CobolElse_Impl(node);
-      }
-      else if (type == ELSE_IF) {
-        return new CobolElseIfImpl(node);
       }
       else if (type == END_PROGRAM_) {
         return new CobolEndProgram_Impl(node);
@@ -279,12 +265,6 @@ public interface CobolTypes {
       }
       else if (type == MULTIPLY_) {
         return new CobolMultiply_Impl(node);
-      }
-      else if (type == NON_PARENTHESIS_CONDITION) {
-        return new CobolNonParenthesisConditionImpl(node);
-      }
-      else if (type == PARENTHESIS_CONDITION) {
-        return new CobolParenthesisConditionImpl(node);
       }
       else if (type == PROCEDURE_DIVISION_) {
         return new CobolProcedureDivision_Impl(node);

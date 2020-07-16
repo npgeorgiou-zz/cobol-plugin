@@ -9,6 +9,7 @@ import com.nikos.gnucobol_3_1.CobolUtil;
 import com.nikos.gnucobol_3_1.Util;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class CobolElementFactory {
@@ -93,6 +94,26 @@ public class CobolElementFactory {
         CobolSentence_ s = (CobolSentence_) createProgram(project, "foo", text).getProcedureDivision_().getLastChild();
         CobolCompute_ c = (CobolCompute_) s.getStatement_List().get(0).getFirstChild();
         return c;
+    }
+
+    public static CobolCondition_ createComparison(
+        Project project,
+        String firstOperand,
+        String operator,
+        String secondOperand
+    ) {
+
+        List<String> list = new ArrayList<>();
+        list.add(firstOperand);
+        list.add(operator);
+        list.add(secondOperand);
+
+        String text = "if " + Util.implode(list, " ") + " display '' end-if.";
+
+        System.out.println(text);
+        CobolSentence_ sentence = (CobolSentence_) createProgram(project, "foo", text).getProcedureDivision_().getLastChild();
+        CobolIf_ ifStatement = (CobolIf_) sentence.getStatement_List().get(0).getFirstChild();
+        return ifStatement.getCondition_();
     }
 
     public static CobolFile createFile(Project project, String text) {

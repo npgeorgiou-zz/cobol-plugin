@@ -39,6 +39,9 @@
         <localInspection language="Cobol" shortName="CobolNotComputeMathStatement" displayName="Doing math without compute" groupName="Cobol"
                          enabledByDefault="true" level="WARNING" implementationClass="com.nikos.gnucobol_3_1.inspections.CobolNotComputeMathStatement"/>
 
+        <localInspection language="Cobol" shortName="CobolNonSymbolConditions" displayName="Doing comparisons without symbols" groupName="Cobol"
+                         enabledByDefault="true" level="WARNING" implementationClass="com.nikos.gnucobol_3_1.inspections.CobolNonSymbolConditions"/>
+
         <localInspection language="Cobol" shortName="CobolUnusedItem" displayName="Unused variable" groupName="Cobol"
                          enabledByDefault="true" level="WARNING" implementationClass="com.nikos.gnucobol_3_1.inspections.CobolUnusedItem"/>
 
