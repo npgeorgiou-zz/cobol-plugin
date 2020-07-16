@@ -216,7 +216,7 @@ private parenthesis_condition ::= PAREN_OPEN composite_condition PAREN_CLOSE
 private non_parenthesis_condition ::= (type_condition_|sign_condition_|comp_condition_|truth_condition_)
 
 private truth_condition_	::= [not] item
-if_condition_operand ::= add_or_subtract_expr_ // Used for easy grabbing of condition operands by quickfixes.
+if_condition_operand ::= (STRING|add_or_subtract_expr_) // Used for easy grabbing of condition operands by quickfixes.
 private type_condition_ ::= if_condition_operand [IS] [not] (numeric|alphabetic|alphabetic-lower|alphabetic-upper)
 private sign_condition_	::= if_condition_operand [IS] [not] (positive|negative|zero_)
 private comp_condition_ ::= if_condition_operand [IS] [not] (equals_|greater_|less_) if_condition_operand

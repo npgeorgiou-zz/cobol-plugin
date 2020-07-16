@@ -1118,12 +1118,13 @@ public class CobolParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // add_or_subtract_expr_
+  // STRING|add_or_subtract_expr_
   public static boolean if_condition_operand(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "if_condition_operand")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, IF_CONDITION_OPERAND, "<if condition operand>");
-    r = add_or_subtract_expr_(b, l + 1);
+    r = consumeToken(b, STRING);
+    if (!r) r = add_or_subtract_expr_(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
