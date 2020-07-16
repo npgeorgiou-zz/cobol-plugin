@@ -277,23 +277,23 @@ public class CobolCompletionContributor extends CompletionContributor {
                         new Node(
                             new GroupItems())))),
             new RepeatingNode(
-                listOfItemsOrLiterals(), null, new ElementaryItems(),
+                listOfItemsOrLiterals(), null, new NumericItems(),
                 new Node(
                     psiElement(CobolTypes.GIVING), new Keywords("giving"),
                     new RepeatingNode(
-                        listOfItems(), null, new ElementaryItems())),
+                        listOfItems(), null, new NumericItems())),
                 new Node(
                     psiElement(CobolTypes.TO), new Keywords("to"),
                     new RepeatingNode(
-                        listOfItems(), null, new ElementaryItems()),
+                        listOfItems(), null, new NumericItems()),
                     new Node(
                         item(),
-                        new ElementaryItems(),
+                        new NumericItems(),
                         new ConditionalNode(
                             psiElement(CobolTypes.GIVING), new Keywords("giving"),
                             psiElement().andNot(isInListOfItems()),
                             new RepeatingNode(
-                                listOfItems(), null, new ElementaryItems()))))));
+                                listOfItems(), null, new NumericItems()))))));
 
         Node subtractStatement = new RootNode(CobolSubtract_.class,
             psiElement(CobolTypes.SUBTRACT),
@@ -306,72 +306,72 @@ public class CobolCompletionContributor extends CompletionContributor {
                         new Node(
                             new GroupItems())))),
             new RepeatingNode(
-                listOfItemsOrLiterals(), null, new ElementaryItems(),
+                listOfItemsOrLiterals(), null, new NumericItems(),
                 new Node(
                     psiElement(CobolTypes.FROM), new Keywords("from"),
                     new RepeatingNode(
-                        listOfItems(), null, new ElementaryItems()),
+                        listOfItems(), null, new NumericItems()),
                     new Node(
-                        item(), new ElementaryItems(),
+                        item(), new NumericItems(),
                         new ConditionalNode(
                             psiElement(CobolTypes.GIVING), new Keywords("giving"),
                             psiElement().andNot(isInListOfItems()),
                             new RepeatingNode(
-                                listOfItems(), null, new ElementaryItems()))))));
+                                listOfItems(), null, new NumericItems()))))));
 
         Node multiplyStatement = new RootNode(CobolMultiply_.class,
             psiElement(CobolTypes.MULTIPLY),
             new Node(
-                itemOrLiteral(), new ElementaryItems(),
+                itemOrLiteral(), new NumericItems(),
                 new Node(
                     psiElement(CobolTypes.BY), new Keywords("by"),
                     new RepeatingNode(
-                        listOfItems(), null, new ElementaryItems()),
+                        listOfItems(), null, new NumericItems()),
                     new Node(
-                        item(), new ElementaryItems(),
+                        item(), new NumericItems(),
                         new ConditionalNode(
                             psiElement(CobolTypes.GIVING), new Keywords("giving"),
                             psiElement().andNot(isInListOfItems()),
                             new RepeatingNode(
-                                listOfItems(), null, new ElementaryItems()))))));
+                                listOfItems(), null, new NumericItems()))))));
 
         Node divideStatement = new RootNode(CobolDivide_.class,
             psiElement(CobolTypes.DIVIDE),
             new Node(
-                itemOrNumber(), new ElementaryItems(),
+                itemOrNumber(), new NumericItems(),
                 new Node(
                     psiElement(CobolTypes.INTO), new Keywords("into"),
                     new RepeatingNode(
-                        listOfItems(), null, new ElementaryItems()),
+                        listOfItems(), null, new NumericItems()),
                     new Node(
-                        item(), new ElementaryItems(),
+                        item(), new NumericItems(),
                         new ConditionalNode(
                             psiElement(CobolTypes.GIVING), new Keywords("giving"),
                             psiElement().andNot(isInListOfItems()),
                             new RepeatingNode(
-                                listOfItems(), null, new ElementaryItems()),
+                                listOfItems(), null, new NumericItems()),
                             new Node(
-                                item(), new ElementaryItems(),
+                                item(), new NumericItems(),
                                 new ConditionalNode(
                                     psiElement(CobolTypes.REMAINDER), new Keywords("remainder"),
                                     psiElement().andNot(isInListOfItems()),
                                     new Node(
-                                        item(), new ElementaryItems())))))),
+                                        item(), new NumericItems())))))),
                 new Node(
                     psiElement(CobolTypes.BY), new Keywords("by"),
                     new Node(
-                        itemOrNumber(), new ElementaryItems(),
+                        itemOrNumber(), new NumericItems(),
                         new Node(
                             psiElement(CobolTypes.GIVING), new Keywords("giving"),
                             new RepeatingNode(
-                                listOfItems(), null, new ElementaryItems()),
+                                listOfItems(), null, new NumericItems()),
                             new Node(
-                                item(), new ElementaryItems(),
+                                item(), new NumericItems(),
                                 new ConditionalNode(
                                     psiElement(CobolTypes.REMAINDER), new Keywords("remainder"),
                                     psiElement().andNot(isInListOfItems()),
                                     new Node(
-                                        item(), new ElementaryItems()))))))));
+                                        item(), new NumericItems()))))))));
 
         Node computeStatement = new RootNode(CobolCompute_.class,
             psiElement(CobolTypes.COMPUTE),

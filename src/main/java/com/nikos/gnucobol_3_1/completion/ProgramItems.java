@@ -38,10 +38,6 @@ class ProgramItems extends CobolCompletionProvider {
     }
 
     protected String typeDescription(CobolItemDecl_ item) {
-        if (item instanceof CobolGroupItemDecl_) {
-            return "Group item";
-        }
-
         if (item instanceof CobolConditionalItemDecl_) {
             CobolConditionalItemDecl_ conditionalItem = (CobolConditionalItemDecl_) item;
             String trueIf;
@@ -56,6 +52,14 @@ class ProgramItems extends CobolCompletionProvider {
             }
 
             return "Conditional item: " + trueIf;
+        }
+
+        if (item instanceof CobolRenamesItemDecl_) {
+            return "Group item";
+        }
+
+        if (item instanceof CobolGroupItemDecl_) {
+            return "Group item";
         }
 
         CobolElementaryItemDecl_ elementaryDecl = (CobolElementaryItemDecl_) item;
