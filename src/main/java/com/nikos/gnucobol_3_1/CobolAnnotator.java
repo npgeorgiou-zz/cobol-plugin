@@ -15,9 +15,7 @@ import com.nikos.gnucobol_3_1.colors.CobolSyntaxHighlighter;
 import com.nikos.gnucobol_3_1.psi.*;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class CobolAnnotator implements Annotator {
@@ -563,6 +561,7 @@ public class CobolAnnotator implements Annotator {
     }
 
     private void truthConditionWithoutConditionalItem(CobolCondition_ condition, AnnotationHolder holder) {
+        if (!(condition.getParent() instanceof CobolIf_)) return;
         if (condition.getChildren().length > 1) return;
         if (!(condition.getFirstChild() instanceof CobolItemUsage_)) return;
 

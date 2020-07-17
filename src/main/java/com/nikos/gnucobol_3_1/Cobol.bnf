@@ -233,7 +233,7 @@ evaluate_ ::= evaluate  eval_subject_ (also eval_subject_)*
               end-evaluate {pin=1}
 eval_subject_ ::= (condition_ | TRUE | false | item_or_literal_ | add_or_subtract_expr_)
 eval_object_ ::= (condition_ | short_condition | TRUE | false | [not] range_ | [not] item_or_literal_ | any)
-short_condition ::= (type_short_condition|sign_short_condition|comp_short_condition)
+private short_condition ::= (type_short_condition|sign_short_condition|comp_short_condition)
 
 
 
@@ -289,7 +289,7 @@ private zero_ ::= (zero|zeros|zeroes)
 private null_ ::= (null|nulls)
 private all_ ::= all (null_|zero_|space_|low_value_|high_value_|quote_|STRING|INTEGER|FLOAT)
 
-range_ ::= item_or_literal_ THROUGH item_or_literal_
+private range_ ::= item_or_literal_ THROUGH item_or_literal_
 
 private list_of_items_or_literals ::=  <<list item_or_literal_>>
 private list_of_items_or_numbers ::=  <<list item_or_number_literal_>>
