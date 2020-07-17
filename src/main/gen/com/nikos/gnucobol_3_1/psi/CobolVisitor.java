@@ -71,6 +71,18 @@ public class CobolVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
+  public void visitEvalObject_(@NotNull CobolEvalObject_ o) {
+    visitPsiElement(o);
+  }
+
+  public void visitEvalSubject_(@NotNull CobolEvalSubject_ o) {
+    visitPsiElement(o);
+  }
+
+  public void visitEvaluate_(@NotNull CobolEvaluate_ o) {
+    visitPsiElement(o);
+  }
+
   public void visitGroupItemDecl_(@NotNull CobolGroupItemDecl_ o) {
     visitItemDecl_(o);
   }
@@ -163,6 +175,10 @@ public class CobolVisitor extends PsiElementVisitor {
     visitNamedElement(o);
   }
 
+  public void visitRange_(@NotNull CobolRange_ o) {
+    visitPsiElement(o);
+  }
+
   public void visitRenamesItemDecl_(@NotNull CobolRenamesItemDecl_ o) {
     visitItemDecl_(o);
   }
@@ -176,6 +192,10 @@ public class CobolVisitor extends PsiElementVisitor {
   }
 
   public void visitSet_(@NotNull CobolSet_ o) {
+    visitPsiElement(o);
+  }
+
+  public void visitShortCondition(@NotNull CobolShortCondition o) {
     visitPsiElement(o);
   }
 

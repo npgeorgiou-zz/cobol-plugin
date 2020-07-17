@@ -401,6 +401,44 @@ public class CobolParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // [IS] [not] (equals_|greater_|less_) if_condition_operand
+  static boolean comp_short_condition(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "comp_short_condition")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = comp_short_condition_0(b, l + 1);
+    r = r && comp_short_condition_1(b, l + 1);
+    r = r && comp_short_condition_2(b, l + 1);
+    r = r && if_condition_operand(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // [IS]
+  private static boolean comp_short_condition_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "comp_short_condition_0")) return false;
+    consumeToken(b, IS);
+    return true;
+  }
+
+  // [not]
+  private static boolean comp_short_condition_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "comp_short_condition_1")) return false;
+    consumeToken(b, NOT);
+    return true;
+  }
+
+  // equals_|greater_|less_
+  private static boolean comp_short_condition_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "comp_short_condition_2")) return false;
+    boolean r;
+    r = equals_(b, l + 1);
+    if (!r) r = greater_(b, l + 1);
+    if (!r) r = less_(b, l + 1);
+    return r;
+  }
+
+  /* ********************************************************** */
   // condition_part_ ((and|or) condition_part_)*
   static boolean composite_condition_(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "composite_condition_")) return false;
@@ -882,6 +920,207 @@ public class CobolParser implements PsiParser, LightPsiParser {
   private static boolean equals__0_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "equals__0_1")) return false;
     consumeToken(b, TO);
+    return true;
+  }
+
+  /* ********************************************************** */
+  // condition_ | short_condition |  TRUE | false | [not] range_ | [not] item_or_literal_ | any
+  public static boolean eval_object_(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "eval_object_")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, EVAL_OBJECT_, "<eval object>");
+    r = condition_(b, l + 1);
+    if (!r) r = short_condition(b, l + 1);
+    if (!r) r = consumeToken(b, TRUE);
+    if (!r) r = consumeToken(b, FALSE);
+    if (!r) r = eval_object__4(b, l + 1);
+    if (!r) r = eval_object__5(b, l + 1);
+    if (!r) r = consumeToken(b, ANY);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // [not] range_
+  private static boolean eval_object__4(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "eval_object__4")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = eval_object__4_0(b, l + 1);
+    r = r && range_(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // [not]
+  private static boolean eval_object__4_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "eval_object__4_0")) return false;
+    consumeToken(b, NOT);
+    return true;
+  }
+
+  // [not] item_or_literal_
+  private static boolean eval_object__5(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "eval_object__5")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = eval_object__5_0(b, l + 1);
+    r = r && item_or_literal_(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // [not]
+  private static boolean eval_object__5_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "eval_object__5_0")) return false;
+    consumeToken(b, NOT);
+    return true;
+  }
+
+  /* ********************************************************** */
+  // condition_ | TRUE | false | item_or_literal_ | add_or_subtract_expr_
+  public static boolean eval_subject_(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "eval_subject_")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, EVAL_SUBJECT_, "<eval subject>");
+    r = condition_(b, l + 1);
+    if (!r) r = consumeToken(b, TRUE);
+    if (!r) r = consumeToken(b, FALSE);
+    if (!r) r = item_or_literal_(b, l + 1);
+    if (!r) r = add_or_subtract_expr_(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // evaluate  eval_subject_ (also eval_subject_)*
+  //                 (when eval_object_    (also eval_object_)* statement_* )+
+  //                 (when other statement_* )?
+  //               end-evaluate
+  public static boolean evaluate_(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "evaluate_")) return false;
+    if (!nextTokenIs(b, EVALUATE)) return false;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, EVALUATE_, null);
+    r = consumeToken(b, EVALUATE);
+    p = r; // pin = 1
+    r = r && report_error_(b, eval_subject_(b, l + 1));
+    r = p && report_error_(b, evaluate__2(b, l + 1)) && r;
+    r = p && report_error_(b, evaluate__3(b, l + 1)) && r;
+    r = p && report_error_(b, evaluate__4(b, l + 1)) && r;
+    r = p && consumeToken(b, END_EVALUATE) && r;
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
+  }
+
+  // (also eval_subject_)*
+  private static boolean evaluate__2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "evaluate__2")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!evaluate__2_0(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "evaluate__2", c)) break;
+    }
+    return true;
+  }
+
+  // also eval_subject_
+  private static boolean evaluate__2_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "evaluate__2_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, ALSO);
+    r = r && eval_subject_(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // (when eval_object_    (also eval_object_)* statement_* )+
+  private static boolean evaluate__3(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "evaluate__3")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = evaluate__3_0(b, l + 1);
+    while (r) {
+      int c = current_position_(b);
+      if (!evaluate__3_0(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "evaluate__3", c)) break;
+    }
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // when eval_object_    (also eval_object_)* statement_*
+  private static boolean evaluate__3_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "evaluate__3_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, WHEN);
+    r = r && eval_object_(b, l + 1);
+    r = r && evaluate__3_0_2(b, l + 1);
+    r = r && evaluate__3_0_3(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // (also eval_object_)*
+  private static boolean evaluate__3_0_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "evaluate__3_0_2")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!evaluate__3_0_2_0(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "evaluate__3_0_2", c)) break;
+    }
+    return true;
+  }
+
+  // also eval_object_
+  private static boolean evaluate__3_0_2_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "evaluate__3_0_2_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, ALSO);
+    r = r && eval_object_(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // statement_*
+  private static boolean evaluate__3_0_3(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "evaluate__3_0_3")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!statement_(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "evaluate__3_0_3", c)) break;
+    }
+    return true;
+  }
+
+  // (when other statement_* )?
+  private static boolean evaluate__4(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "evaluate__4")) return false;
+    evaluate__4_0(b, l + 1);
+    return true;
+  }
+
+  // when other statement_*
+  private static boolean evaluate__4_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "evaluate__4_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeTokens(b, 0, WHEN, OTHER);
+    r = r && evaluate__4_0_2(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // statement_*
+  private static boolean evaluate__4_0_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "evaluate__4_0_2")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!statement_(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "evaluate__4_0_2", c)) break;
+    }
     return true;
   }
 
@@ -2200,6 +2439,19 @@ public class CobolParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // item_or_literal_ THROUGH item_or_literal_
+  public static boolean range_(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "range_")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, RANGE_, "<range>");
+    r = item_or_literal_(b, l + 1);
+    r = r && consumeToken(b, THROUGH);
+    r = r && item_or_literal_(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  /* ********************************************************** */
   // REDEFINES item_usage_ item_type_decl_
   static boolean redefines_(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "redefines_")) return false;
@@ -2396,6 +2648,19 @@ public class CobolParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // type_short_condition|sign_short_condition|comp_short_condition
+  public static boolean short_condition(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "short_condition")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, SHORT_CONDITION, "<short condition>");
+    r = type_short_condition(b, l + 1);
+    if (!r) r = sign_short_condition(b, l + 1);
+    if (!r) r = comp_short_condition(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  /* ********************************************************** */
   // if_condition_operand [IS] [not] (positive|negative|zero_)
   static boolean sign_condition_(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "sign_condition_")) return false;
@@ -2434,6 +2699,43 @@ public class CobolParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // [IS] [not] (positive|negative|zero_)
+  static boolean sign_short_condition(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "sign_short_condition")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = sign_short_condition_0(b, l + 1);
+    r = r && sign_short_condition_1(b, l + 1);
+    r = r && sign_short_condition_2(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // [IS]
+  private static boolean sign_short_condition_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "sign_short_condition_0")) return false;
+    consumeToken(b, IS);
+    return true;
+  }
+
+  // [not]
+  private static boolean sign_short_condition_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "sign_short_condition_1")) return false;
+    consumeToken(b, NOT);
+    return true;
+  }
+
+  // positive|negative|zero_
+  private static boolean sign_short_condition_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "sign_short_condition_2")) return false;
+    boolean r;
+    r = consumeToken(b, POSITIVE);
+    if (!r) r = consumeToken(b, NEGATIVE);
+    if (!r) r = zero_(b, l + 1);
+    return r;
+  }
+
+  /* ********************************************************** */
   // space|spaces
   static boolean space_(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "space_")) return false;
@@ -2445,12 +2747,13 @@ public class CobolParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // if_|accept_|display_|initialize_|move_|add_|subtract_|multiply_|divide_|compute_|call_|set_
+  // if_|evaluate_|accept_|display_|initialize_|move_|add_|subtract_|multiply_|divide_|compute_|call_|set_
   public static boolean statement_(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "statement_")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, STATEMENT_, "<statement>");
     r = if_(b, l + 1);
+    if (!r) r = evaluate_(b, l + 1);
     if (!r) r = accept_(b, l + 1);
     if (!r) r = display_(b, l + 1);
     if (!r) r = initialize_(b, l + 1);
@@ -2629,6 +2932,44 @@ public class CobolParser implements PsiParser, LightPsiParser {
   // numeric|alphabetic|alphabetic-lower|alphabetic-upper
   private static boolean type_condition__3(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "type_condition__3")) return false;
+    boolean r;
+    r = consumeToken(b, NUMERIC);
+    if (!r) r = consumeToken(b, ALPHABETIC);
+    if (!r) r = consumeToken(b, ALPHABETIC_LOWER);
+    if (!r) r = consumeToken(b, ALPHABETIC_UPPER);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // [IS] [not] (numeric|alphabetic|alphabetic-lower|alphabetic-upper)
+  static boolean type_short_condition(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "type_short_condition")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = type_short_condition_0(b, l + 1);
+    r = r && type_short_condition_1(b, l + 1);
+    r = r && type_short_condition_2(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // [IS]
+  private static boolean type_short_condition_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "type_short_condition_0")) return false;
+    consumeToken(b, IS);
+    return true;
+  }
+
+  // [not]
+  private static boolean type_short_condition_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "type_short_condition_1")) return false;
+    consumeToken(b, NOT);
+    return true;
+  }
+
+  // numeric|alphabetic|alphabetic-lower|alphabetic-upper
+  private static boolean type_short_condition_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "type_short_condition_2")) return false;
     boolean r;
     r = consumeToken(b, NUMERIC);
     if (!r) r = consumeToken(b, ALPHABETIC);

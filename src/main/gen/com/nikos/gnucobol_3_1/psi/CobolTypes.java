@@ -24,6 +24,9 @@ public interface CobolTypes {
   IElementType ELEMENTARY_ITEM_DECL_ = new CobolElementType("ELEMENTARY_ITEM_DECL_");
   IElementType END_PROGRAM_ = new CobolElementType("END_PROGRAM_");
   IElementType ENVIRONMENT_DIVISION_ = new CobolElementType("ENVIRONMENT_DIVISION_");
+  IElementType EVALUATE_ = new CobolElementType("EVALUATE_");
+  IElementType EVAL_OBJECT_ = new CobolElementType("EVAL_OBJECT_");
+  IElementType EVAL_SUBJECT_ = new CobolElementType("EVAL_SUBJECT_");
   IElementType GROUP_ITEM_DECL_ = new CobolElementType("GROUP_ITEM_DECL_");
   IElementType IDENTIFICATION_DIVISION_ = new CobolElementType("IDENTIFICATION_DIVISION_");
   IElementType IDENTIFIER_OR_STRING_ = new CobolElementType("IDENTIFIER_OR_STRING_");
@@ -47,10 +50,12 @@ public interface CobolTypes {
   IElementType PROGRAM_ID_ = new CobolElementType("PROGRAM_ID_");
   IElementType PROGRAM_NAME_ = new CobolElementType("PROGRAM_NAME_");
   IElementType PROGRAM_NAME_DECL_ = new CobolElementType("PROGRAM_NAME_DECL_");
+  IElementType RANGE_ = new CobolElementType("RANGE_");
   IElementType RENAMES_ITEM_DECL_ = new CobolElementType("RENAMES_ITEM_DECL_");
   IElementType SECURITY_ = new CobolElementType("SECURITY_");
   IElementType SENTENCE_ = new CobolElementType("SENTENCE_");
   IElementType SET_ = new CobolElementType("SET_");
+  IElementType SHORT_CONDITION = new CobolElementType("SHORT_CONDITION");
   IElementType STATEMENT_ = new CobolElementType("STATEMENT_");
   IElementType SUBTRACT_ = new CobolElementType("SUBTRACT_");
   IElementType WS_SECTION_ = new CobolElementType("WS_SECTION_");
@@ -63,7 +68,9 @@ public interface CobolTypes {
   IElementType ALPHABETIC_LOWER = new CobolTokenType("alphabetic-lower");
   IElementType ALPHABETIC_UPPER = new CobolTokenType("alphabetic-upper");
   IElementType ALPHANUMERIC = new CobolTokenType("ALPHANUMERIC");
+  IElementType ALSO = new CobolTokenType("also");
   IElementType AND = new CobolTokenType("and");
+  IElementType ANY = new CobolTokenType("any");
   IElementType AUTHOR = new CobolTokenType("AUTHOR");
   IElementType BY = new CobolTokenType("BY");
   IElementType CALL = new CobolTokenType("CALL");
@@ -85,11 +92,14 @@ public interface CobolTypes {
   IElementType DOT = new CobolTokenType("DOT");
   IElementType ELSE = new CobolTokenType("else");
   IElementType END = new CobolTokenType("END");
+  IElementType END_EVALUATE = new CobolTokenType("end-evaluate");
   IElementType END_IF = new CobolTokenType("end-if");
   IElementType ENVIRONMENT_DIVISION = new CobolTokenType("ENVIRONMENT_DIVISION");
   IElementType EQUAL = new CobolTokenType("equal");
   IElementType EQUALS = new CobolTokenType("equals");
   IElementType EQUALS_OP = new CobolTokenType("EQUALS_OP");
+  IElementType EVALUATE = new CobolTokenType("evaluate");
+  IElementType FALSE = new CobolTokenType("false");
   IElementType FLOAT = new CobolTokenType("FLOAT");
   IElementType FROM = new CobolTokenType("FROM");
   IElementType GIVING = new CobolTokenType("GIVING");
@@ -124,6 +134,7 @@ public interface CobolTypes {
   IElementType NUMERIC = new CobolTokenType("numeric");
   IElementType OF = new CobolTokenType("OF");
   IElementType OR = new CobolTokenType("or");
+  IElementType OTHER = new CobolTokenType("other");
   IElementType PAREN_CLOSE = new CobolTokenType("PAREN_CLOSE");
   IElementType PAREN_OPEN = new CobolTokenType("PAREN_OPEN");
   IElementType PIC = new CobolTokenType("PIC");
@@ -159,6 +170,7 @@ public interface CobolTypes {
   IElementType TRUE = new CobolTokenType("TRUE");
   IElementType USING = new CobolTokenType("USING");
   IElementType VALUE = new CobolTokenType("VALUE");
+  IElementType WHEN = new CobolTokenType("when");
   IElementType WORKING_STORAGE_SECTION = new CobolTokenType("WORKING_STORAGE_SECTION");
   IElementType YYYYDDD = new CobolTokenType("YYYYDDD");
   IElementType YYYYMMDD = new CobolTokenType("YYYYMMDD");
@@ -216,6 +228,15 @@ public interface CobolTypes {
       }
       else if (type == ENVIRONMENT_DIVISION_) {
         return new CobolEnvironmentDivision_Impl(node);
+      }
+      else if (type == EVALUATE_) {
+        return new CobolEvaluate_Impl(node);
+      }
+      else if (type == EVAL_OBJECT_) {
+        return new CobolEvalObject_Impl(node);
+      }
+      else if (type == EVAL_SUBJECT_) {
+        return new CobolEvalSubject_Impl(node);
       }
       else if (type == GROUP_ITEM_DECL_) {
         return new CobolGroupItemDecl_Impl(node);
@@ -286,6 +307,9 @@ public interface CobolTypes {
       else if (type == PROGRAM_NAME_DECL_) {
         return new CobolProgramNameDecl_Impl(node);
       }
+      else if (type == RANGE_) {
+        return new CobolRange_Impl(node);
+      }
       else if (type == RENAMES_ITEM_DECL_) {
         return new CobolRenamesItemDecl_Impl(node);
       }
@@ -297,6 +321,9 @@ public interface CobolTypes {
       }
       else if (type == SET_) {
         return new CobolSet_Impl(node);
+      }
+      else if (type == SHORT_CONDITION) {
+        return new CobolShortConditionImpl(node);
       }
       else if (type == STATEMENT_) {
         return new CobolStatement_Impl(node);

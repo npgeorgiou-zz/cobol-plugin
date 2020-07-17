@@ -64,6 +64,12 @@ public class CobolStatement_Impl extends ASTWrapperPsiElement implements CobolSt
 
   @Override
   @Nullable
+  public CobolEvaluate_ getEvaluate_() {
+    return findChildByClass(CobolEvaluate_.class);
+  }
+
+  @Override
+  @Nullable
   public CobolIf_ getIf_() {
     return findChildByClass(CobolIf_.class);
   }

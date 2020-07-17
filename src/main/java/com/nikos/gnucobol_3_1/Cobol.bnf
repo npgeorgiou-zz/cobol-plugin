@@ -202,28 +202,41 @@ private using_ ::= USING IDENTIFIER+
 
 
 sentence_ ::= (statement_+ DOT) {pin=1}
-statement_ ::= (if_|accept_|display_|initialize_|move_|add_|subtract_|multiply_|divide_|compute_|call_|set_) {pin=1}
+statement_ ::= (if_|evaluate_|accept_|display_|initialize_|move_|add_|subtract_|multiply_|divide_|compute_|call_|set_) {pin=1}
 
 item_name_decl_ ::= IDENTIFIER {methods=[setName getName getNameIdentifier]}
 // TODO: Define TO & IS inline.
 
-
 if_ ::= if composite_condition_ [then] statement_+ [else statement_+] [end-if]            {pin=1}
-
 private composite_condition_ ::= condition_part_ ((and|or) condition_part_)*
 private condition_part_ ::= not*  (parenthesis_condition_|condition_)
 private parenthesis_condition_ ::= PAREN_OPEN composite_condition_ PAREN_CLOSE
 condition_ ::= (type_condition_|sign_condition_|comp_condition_|truth_condition_)
-
 private truth_condition_	::= [not] item
 if_condition_operand ::= (STRING|add_or_subtract_expr_) // Used for easy grabbing of condition operands by quickfixes.
 private type_condition_ ::= if_condition_operand [IS] [not] (numeric|alphabetic|alphabetic-lower|alphabetic-upper)
 private sign_condition_	::= if_condition_operand [IS] [not] (positive|negative|zero_)
 private comp_condition_ ::= if_condition_operand [IS] [not] (equals_|greater_|less_) if_condition_operand
+private type_short_condition ::= [IS] [not] (numeric|alphabetic|alphabetic-lower|alphabetic-upper)
+private sign_short_condition ::= [IS] [not] (positive|negative|zero_)
+private comp_short_condition ::= [IS] [not] (equals_|greater_|less_) if_condition_operand
+private equals_ ::= ((equal|equals) [TO] | EQUALS_OP)
+private greater_ ::= (greater [than] [or equal [TO]] |MORE_OP|MORE_EQUAL_OP)
+private less_ ::= (less [than] [or equal [TO]] |LESS_OP|LESS_EQUAL_OP)
 
-private equals_ ::= ((equal|equals) [TO] | EQUALS_OP){pin=1}
-private greater_ ::= (greater [than] [or equal [TO]] |MORE_OP|MORE_EQUAL_OP){pin=1}
-private less_ ::= (less [than] [or equal [TO]] |LESS_OP|LESS_EQUAL_OP){pin=1}
+
+
+
+evaluate_ ::= evaluate  eval_subject_ (also eval_subject_)*
+                (when eval_object_    (also eval_object_)* statement_* )+
+                (when other statement_* )?
+              end-evaluate {pin=1}
+eval_subject_ ::= (condition_ | TRUE | false | item_or_literal_ | add_or_subtract_expr_)
+eval_object_ ::= (condition_ | short_condition | TRUE | false | [not] range_ | [not] item_or_literal_ | any)
+short_condition ::= (type_short_condition|sign_short_condition|comp_short_condition)
+
+
+
 
 accept_ ::= ACCEPT item [FROM (IDENTIFIER|DATE [YYYYMMDD]|DAY [YYYYDDD]|DAY-OF-WEEK|TIME)] {pin=1}
 display_ ::= DISPLAY list_of_items_or_literals {pin=1}
@@ -275,6 +288,8 @@ private space_ ::= (space|spaces)
 private zero_ ::= (zero|zeros|zeroes)
 private null_ ::= (null|nulls)
 private all_ ::= all (null_|zero_|space_|low_value_|high_value_|quote_|STRING|INTEGER|FLOAT)
+
+range_ ::= item_or_literal_ THROUGH item_or_literal_
 
 private list_of_items_or_literals ::=  <<list item_or_literal_>>
 private list_of_items_or_numbers ::=  <<list item_or_number_literal_>>

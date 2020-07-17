@@ -120,6 +120,7 @@ IDENTIFIER = ([:jletterdigit:])+ (- | [:jletterdigit:])* ([:jletterdigit:])+
     "by"                      {return CobolTypes.BY;}
     "set"                     {return CobolTypes.SET;}
     "true"                    {return CobolTypes.TRUE;}
+    "false"                   {return CobolTypes.FALSE;}
 
     "using"                   {return CobolTypes.USING;}
     "move"                    {return CobolTypes.MOVE;}
@@ -147,6 +148,13 @@ IDENTIFIER = ([:jletterdigit:])+ (- | [:jletterdigit:])* ([:jletterdigit:])+
     "else"                    {return CobolTypes.ELSE;}
     "then"                    {return CobolTypes.THEN;}
     "end-if"                  {return CobolTypes.END_IF;}
+
+    "evaluate"                {return CobolTypes.EVALUATE;}
+    "also"                    {return CobolTypes.ALSO;}
+    "when"                    {return CobolTypes.WHEN;}
+    "other"                   {return CobolTypes.OTHER;}
+    "end-evaluate"            {return CobolTypes.END_EVALUATE;}
+    "any"                     {return CobolTypes.ANY;}
 
     "not"                     {return CobolTypes.NOT;}
     "equal"                   {return CobolTypes.EQUAL;}
