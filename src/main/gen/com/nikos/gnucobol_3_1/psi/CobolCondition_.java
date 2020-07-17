@@ -7,9 +7,6 @@ import com.intellij.psi.PsiElement;
 
 public interface CobolCondition_ extends PsiElement {
 
-  @NotNull
-  List<CobolCondition_> getCondition_List();
-
   @Nullable
   CobolIfConditionOperand getIfConditionOperand();
 

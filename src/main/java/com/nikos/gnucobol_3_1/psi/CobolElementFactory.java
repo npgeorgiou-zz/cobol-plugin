@@ -110,7 +110,6 @@ public class CobolElementFactory {
 
         String text = "if " + Util.implode(list, " ") + " display '' end-if.";
 
-        System.out.println(text);
         CobolSentence_ sentence = (CobolSentence_) createProgram(project, "foo", text).getProcedureDivision_().getLastChild();
         CobolIf_ ifStatement = (CobolIf_) sentence.getStatement_List().get(0).getFirstChild();
         return ifStatement.getCondition_List().get(0);

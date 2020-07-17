@@ -118,6 +118,7 @@ public class CobolParserDefinition implements ParserDefinition {
             CobolTypes.AND,
             CobolTypes.OR,
             CobolTypes.EQUAL,
+            CobolTypes.EQUALS,
             CobolTypes.GREATER,
             CobolTypes.LESS,
             CobolTypes.THAN,

@@ -13,7 +13,6 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.nikos.gnucobol_3_1.colors.CobolSyntaxHighlighter;
 import com.nikos.gnucobol_3_1.psi.*;
-import com.nikos.gnucobol_3_1.psi.impl.CobolItemNameDecl_Impl;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -159,10 +158,10 @@ public class CobolAnnotator implements Annotator {
             return;
         }
 
-        if (element instanceof CobolIf_) {
-            CobolIf_ ifStatement = (CobolIf_) element;
+        if (element instanceof CobolCondition_) {
+            CobolCondition_ condition = (CobolCondition_) element;
 
-            truthConditionWithoutConditionalItem(ifStatement, holder);
+            truthConditionWithoutConditionalItem(condition, holder);
             return;
         }
 
@@ -563,11 +562,7 @@ public class CobolAnnotator implements Annotator {
         }
     }
 
-    private void truthConditionWithoutConditionalItem(CobolIf_ ifStatement, AnnotationHolder holder) {
-        if (ifStatement.getCondition_List().isEmpty()) return;
-
-        CobolCondition_ condition = ifStatement.getCondition_List().get(0);
-
+    private void truthConditionWithoutConditionalItem(CobolCondition_ condition, AnnotationHolder holder) {
         if (condition.getChildren().length > 1) return;
         if (!(condition.getFirstChild() instanceof CobolItemUsage_)) return;
 

@@ -195,20 +195,20 @@ class CobolLexer implements FlexLexer {
     "\2\0\3\23\1\75\2\23\1\57\6\23\1\76\13\23"+
     "\1\77\1\0\6\23\1\73\1\23\1\100\1\101\4\23"+
     "\1\74\2\23\1\102\2\23\1\0\1\23\1\103\1\23"+
-    "\1\104\5\23\1\105\1\106\2\23\1\76\10\23\1\107"+
-    "\4\23\1\0\4\23\1\100\5\23\1\110\2\23\2\0"+
-    "\2\23\1\111\1\23\1\112\2\23\1\52\2\23\1\113"+
-    "\1\23\1\114\2\23\1\115\6\23\1\116\4\23\1\117"+
-    "\1\120\2\23\1\0\2\23\1\121\3\23\1\122\1\23"+
-    "\1\0\3\23\1\123\1\23\1\0\2\23\1\0\1\124"+
-    "\5\23\1\0\7\23\1\125\1\126\1\127\1\23\1\0"+
-    "\1\23\1\130\2\23\1\131\3\23\1\0\4\23\1\132"+
-    "\1\0\1\133\1\134\1\0\1\23\1\130\5\23\1\0"+
-    "\1\135\3\23\1\0\1\134\1\0\3\23\1\136\1\23"+
-    "\1\137\2\0\1\23\1\140\2\0\3\23\1\141\1\142"+
-    "\1\0\1\143\2\0\3\23\4\0\1\23\3\0\1\144"+
-    "\1\0\1\23\14\0\1\145\7\0\1\146\3\0\1\147"+
-    "\3\0\1\150\1\151";
+    "\1\75\5\23\1\104\1\105\2\23\1\76\10\23\1\106"+
+    "\4\23\1\0\4\23\1\100\5\23\1\107\2\23\2\0"+
+    "\2\23\1\110\1\23\1\111\2\23\1\52\2\23\1\112"+
+    "\1\23\1\113\2\23\1\114\6\23\1\115\4\23\1\116"+
+    "\1\117\2\23\1\0\2\23\1\120\3\23\1\121\1\23"+
+    "\1\0\3\23\1\122\1\23\1\0\2\23\1\0\1\123"+
+    "\5\23\1\0\7\23\1\124\1\125\1\126\1\23\1\0"+
+    "\1\23\1\127\2\23\1\130\3\23\1\0\4\23\1\131"+
+    "\1\0\1\132\1\133\1\0\1\23\1\127\5\23\1\0"+
+    "\1\134\3\23\1\0\1\133\1\0\3\23\1\135\1\23"+
+    "\1\136\2\0\1\23\1\137\2\0\3\23\1\140\1\141"+
+    "\1\0\1\142\2\0\3\23\4\0\1\23\3\0\1\143"+
+    "\1\0\1\23\14\0\1\144\7\0\1\145\3\0\1\146"+
+    "\3\0\1\147\1\150";
 
   private static int [] zzUnpackAction() {
     int [] result = new int[501];
@@ -1262,527 +1262,522 @@ class CobolLexer implements FlexLexer {
             { return TokenType.BAD_CHARACTER;
             } 
             // fall through
-          case 106: break;
+          case 105: break;
           case 2: 
             { return TokenType.WHITE_SPACE;
             } 
             // fall through
-          case 107: break;
+          case 106: break;
           case 3: 
             { return CobolTypes.ADD_OP;
             } 
             // fall through
-          case 108: break;
+          case 107: break;
           case 4: 
             { return CobolTypes.INTEGER;
             } 
             // fall through
-          case 109: break;
+          case 108: break;
           case 5: 
             { return CobolTypes.DOT;
             } 
             // fall through
-          case 110: break;
+          case 109: break;
           case 6: 
             { return CobolTypes.MULTIPLY_OP;
             } 
             // fall through
-          case 111: break;
+          case 110: break;
           case 7: 
             { return CobolTypes.MORE_OP;
             } 
             // fall through
-          case 112: break;
+          case 111: break;
           case 8: 
             { return CobolTypes.SUBTRACT_OP;
             } 
             // fall through
-          case 113: break;
+          case 112: break;
           case 9: 
             { return CobolTypes.PAREN_OPEN;
             } 
             // fall through
-          case 114: break;
+          case 113: break;
           case 10: 
             { return CobolTypes.PAREN_CLOSE;
             } 
             // fall through
-          case 115: break;
+          case 114: break;
           case 11: 
             { return CobolTypes.COMMA;
             } 
             // fall through
-          case 116: break;
+          case 115: break;
           case 12: 
             { return CobolTypes.EQUALS_OP;
             } 
             // fall through
-          case 117: break;
+          case 116: break;
           case 13: 
             { return CobolTypes.DIVIDE_OP;
             } 
             // fall through
-          case 118: break;
+          case 117: break;
           case 14: 
             { return CobolTypes.LESS_OP;
             } 
             // fall through
-          case 119: break;
+          case 118: break;
           case 15: 
             { yybegin(YYINITIAL); return CobolTypes.DOT;
             } 
             // fall through
-          case 120: break;
+          case 119: break;
           case 16: 
             { return CobolTypes.PIC_TYPE_ALPHA;
             } 
             // fall through
-          case 121: break;
+          case 120: break;
           case 17: 
             { return CobolTypes.PIC_TYPE_NUMERIC;
             } 
             // fall through
-          case 122: break;
+          case 121: break;
           case 18: 
             { return CobolTypes.PIC_TYPE_ALPHANUMERIC;
             } 
             // fall through
-          case 123: break;
+          case 122: break;
           case 19: 
             { return CobolTypes.IDENTIFIER;
             } 
             // fall through
-          case 124: break;
+          case 123: break;
           case 20: 
             { return CobolTypes.STRING;
             } 
             // fall through
-          case 125: break;
+          case 124: break;
           case 21: 
             { return CobolTypes.POWER_OP ;
             } 
             // fall through
-          case 126: break;
+          case 125: break;
           case 22: 
             { return CobolParserDefinition.COMMENT;
             } 
             // fall through
-          case 127: break;
+          case 126: break;
           case 23: 
             { return CobolTypes.MORE_EQUAL_OP;
             } 
             // fall through
-          case 128: break;
+          case 127: break;
           case 24: 
             { return CobolTypes.IS;
             } 
             // fall through
-          case 129: break;
+          case 128: break;
           case 25: 
             { return CobolTypes.IN;
             } 
             // fall through
-          case 130: break;
+          case 129: break;
           case 26: 
             { return CobolTypes.IF;
             } 
             // fall through
-          case 131: break;
+          case 130: break;
           case 27: 
             { return CobolTypes.LESS_EQUAL_OP;
             } 
             // fall through
-          case 132: break;
+          case 131: break;
           case 28: 
             { return CobolTypes.TO;
             } 
             // fall through
-          case 133: break;
+          case 132: break;
           case 29: 
             { return CobolTypes.OF;
             } 
             // fall through
-          case 134: break;
+          case 133: break;
           case 30: 
             { return CobolTypes.OR;
             } 
             // fall through
-          case 135: break;
+          case 134: break;
           case 31: 
             { return CobolTypes.BY;
             } 
             // fall through
-          case 136: break;
+          case 135: break;
           case 32: 
             { return CobolTypes.PIC_TYPE_SIGNED_NUMERIC;
             } 
             // fall through
-          case 137: break;
+          case 136: break;
           case 33: 
             { return CobolTypes.PIC_TYPE_DECIMAL_NUMERIC;
             } 
             // fall through
-          case 138: break;
+          case 137: break;
           case 34: 
             { return CobolTypes.FLOAT;
             } 
             // fall through
-          case 139: break;
+          case 138: break;
           case 35: 
             { return CobolTypes.SET;
             } 
             // fall through
-          case 140: break;
+          case 139: break;
           case 36: 
             { return CobolTypes.DAY;
             } 
             // fall through
-          case 141: break;
+          case 140: break;
           case 37: 
             { return CobolTypes.END;
             } 
             // fall through
-          case 142: break;
+          case 141: break;
           case 38: 
             { return CobolTypes.NOT;
             } 
             // fall through
-          case 143: break;
+          case 142: break;
           case 39: 
             { return CobolTypes.ADD;
             } 
             // fall through
-          case 144: break;
+          case 143: break;
           case 40: 
             { return CobolTypes.AND;
             } 
             // fall through
-          case 145: break;
+          case 144: break;
           case 41: 
             { return CobolTypes.ALL;
             } 
             // fall through
-          case 146: break;
+          case 145: break;
           case 42: 
             { yybegin(ITEM_TYPE); return CobolTypes.PIC;
             } 
             // fall through
-          case 147: break;
+          case 146: break;
           case 43: 
             { return CobolTypes.INTO;
             } 
             // fall through
-          case 148: break;
+          case 147: break;
           case 44: 
             { return CobolTypes.DATE;
             } 
             // fall through
-          case 149: break;
+          case 148: break;
           case 45: 
             { return CobolTypes.DATA;
             } 
             // fall through
-          case 150: break;
+          case 149: break;
           case 46: 
             { return CobolTypes.ELSE;
             } 
             // fall through
-          case 151: break;
+          case 150: break;
           case 47: 
             { return CobolTypes.NULL;
             } 
             // fall through
-          case 152: break;
+          case 151: break;
           case 48: 
             { return CobolTypes.TIME;
             } 
             // fall through
-          case 153: break;
+          case 152: break;
           case 49: 
             { return CobolTypes.TRUE;
             } 
             // fall through
-          case 154: break;
+          case 153: break;
           case 50: 
             { return CobolTypes.THEN;
             } 
             // fall through
-          case 155: break;
+          case 154: break;
           case 51: 
             { return CobolTypes.THAN;
             } 
             // fall through
-          case 156: break;
+          case 155: break;
           case 52: 
             { return CobolTypes.THROUGH;
             } 
             // fall through
-          case 157: break;
+          case 156: break;
           case 53: 
             { return CobolTypes.FROM;
             } 
             // fall through
-          case 158: break;
+          case 157: break;
           case 54: 
             { return CobolTypes.CALL;
             } 
             // fall through
-          case 159: break;
+          case 158: break;
           case 55: 
             { return CobolTypes.COPY;
             } 
             // fall through
-          case 160: break;
+          case 159: break;
           case 56: 
             { return CobolTypes.CORR;
             } 
             // fall through
-          case 161: break;
+          case 160: break;
           case 57: 
             { return CobolTypes.MOVE;
             } 
             // fall through
-          case 162: break;
+          case 161: break;
           case 58: 
             { return CobolTypes.LESS;
             } 
             // fall through
-          case 163: break;
+          case 162: break;
           case 59: 
             { return CobolTypes.ZERO;
             } 
             // fall through
-          case 164: break;
+          case 163: break;
           case 60: 
             { return CobolTypes.SPACE;
             } 
             // fall through
-          case 165: break;
+          case 164: break;
           case 61: 
             { return CobolTypes.EQUAL;
             } 
             // fall through
-          case 166: break;
+          case 165: break;
           case 62: 
             { return CobolTypes.VALUE;
             } 
             // fall through
-          case 167: break;
+          case 166: break;
           case 63: 
             { return CobolTypes.USING;
             } 
             // fall through
-          case 168: break;
+          case 167: break;
           case 64: 
             { return CobolTypes.QUOTE;
             } 
             // fall through
-          case 169: break;
+          case 168: break;
           case 65: 
             { yybegin(YYINITIAL); return CobolTypes.VALUE;
             } 
             // fall through
-          case 170: break;
+          case 169: break;
           case 66: 
             { return CobolTypes.DIVIDE;
             } 
             // fall through
-          case 171: break;
+          case 170: break;
           case 67: 
             { return CobolTypes.END_IF;
             } 
             // fall through
-          case 172: break;
+          case 171: break;
           case 68: 
-            { return CobolTypes.EQUALS;
-            } 
-            // fall through
-          case 173: break;
-          case 69: 
             { return CobolTypes.ACCEPT;
             } 
             // fall through
-          case 174: break;
-          case 70: 
+          case 172: break;
+          case 69: 
             { return CobolTypes.AUTHOR;
             } 
             // fall through
-          case 175: break;
-          case 71: 
+          case 173: break;
+          case 70: 
             { return CobolTypes.GIVING;
             } 
             // fall through
-          case 176: break;
-          case 72: 
+          case 174: break;
+          case 71: 
             { return CobolTypes.DISPLAY;
             } 
             // fall through
-          case 177: break;
-          case 73: 
+          case 175: break;
+          case 72: 
             { return CobolTypes.NUMERIC;
             } 
             // fall through
-          case 178: break;
-          case 74: 
+          case 176: break;
+          case 73: 
             { return CobolTypes.COMPUTE;
             } 
             // fall through
-          case 179: break;
-          case 75: 
+          case 177: break;
+          case 74: 
             { return CobolTypes.PROGRAM;
             } 
             // fall through
-          case 180: break;
-          case 76: 
+          case 178: break;
+          case 75: 
             { return CobolTypes.RENAMES;
             } 
             // fall through
-          case 181: break;
-          case 77: 
+          case 179: break;
+          case 76: 
             { return CobolTypes.GREATER;
             } 
             // fall through
-          case 182: break;
-          case 78: 
+          case 180: break;
+          case 77: 
             { return CobolTypes.YYYYDDD;
             } 
             // fall through
-          case 183: break;
-          case 79: 
+          case 181: break;
+          case 78: 
             { return CobolTypes.SECURITY;
             } 
             // fall through
-          case 184: break;
-          case 80: 
+          case 182: break;
+          case 79: 
             { return CobolTypes.SUBTRACT;
             } 
             // fall through
-          case 185: break;
-          case 81: 
+          case 183: break;
+          case 80: 
             { return CobolTypes.NEGATIVE;
             } 
             // fall through
-          case 186: break;
-          case 82: 
+          case 184: break;
+          case 81: 
             { return CobolTypes.POSITIVE;
             } 
             // fall through
-          case 187: break;
-          case 83: 
+          case 185: break;
+          case 82: 
             { return CobolTypes.MULTIPLY;
             } 
             // fall through
-          case 188: break;
-          case 84: 
+          case 186: break;
+          case 83: 
             { return CobolTypes.YYYYMMDD;
             } 
             // fall through
-          case 189: break;
-          case 85: 
+          case 187: break;
+          case 84: 
             { return CobolTypes.REDEFINES;
             } 
             // fall through
-          case 190: break;
-          case 86: 
+          case 188: break;
+          case 85: 
             { return CobolTypes.REPLACING;
             } 
             // fall through
-          case 191: break;
-          case 87: 
+          case 189: break;
+          case 86: 
             { return CobolTypes.REMAINDER;
             } 
             // fall through
-          case 192: break;
-          case 88: 
+          case 190: break;
+          case 87: 
             { return CobolTypes.LOW_VALUE;
             } 
             // fall through
-          case 193: break;
-          case 89: 
+          case 191: break;
+          case 88: 
             { return CobolTypes.INITIALIZE;
             } 
             // fall through
-          case 194: break;
-          case 90: 
+          case 192: break;
+          case 89: 
             { return CobolTypes.ALPHABETIC;
             } 
             // fall through
-          case 195: break;
-          case 91: 
+          case 193: break;
+          case 90: 
             { return CobolTypes.PROGRAM_ID;
             } 
             // fall through
-          case 196: break;
-          case 92: 
+          case 194: break;
+          case 91: 
             { return CobolTypes.HIGH_VALUE;
             } 
             // fall through
-          case 197: break;
-          case 93: 
+          case 195: break;
+          case 92: 
             { return CobolTypes.DAY_OF_WEEK;
             } 
             // fall through
-          case 198: break;
-          case 94: 
+          case 196: break;
+          case 93: 
             { return CobolTypes.INSTALLATION;
             } 
             // fall through
-          case 199: break;
-          case 95: 
+          case 197: break;
+          case 94: 
             { return CobolTypes.DATE_WRITTEN;
             } 
             // fall through
-          case 200: break;
-          case 96: 
+          case 198: break;
+          case 95: 
             { return CobolTypes.ALPHANUMERIC;
             } 
             // fall through
-          case 201: break;
-          case 97: 
+          case 199: break;
+          case 96: 
             { return CobolTypes.DATE_COMPILED;
             } 
             // fall through
-          case 202: break;
-          case 98: 
+          case 200: break;
+          case 97: 
             { return CobolTypes.DATA_DIVISION;
             } 
             // fall through
-          case 203: break;
-          case 99: 
+          case 201: break;
+          case 98: 
             { return CobolTypes.CORRESPONDING;
             } 
             // fall through
-          case 204: break;
-          case 100: 
+          case 202: break;
+          case 99: 
             { return CobolTypes.LINKAGE_SECTION;
             } 
             // fall through
-          case 205: break;
-          case 101: 
+          case 203: break;
+          case 100: 
             { return CobolTypes.PROCEDURE_DIVISION;
             } 
             // fall through
-          case 206: break;
-          case 102: 
+          case 204: break;
+          case 101: 
             { return CobolTypes.ENVIRONMENT_DIVISION;
             } 
             // fall through
-          case 207: break;
-          case 103: 
+          case 205: break;
+          case 102: 
             { return CobolTypes.LOCAL_STORAGE_SECTION;
             } 
             // fall through
-          case 208: break;
-          case 104: 
+          case 206: break;
+          case 103: 
             { return CobolTypes.IDENTIFICATION_DIVISION;
             } 
             // fall through
-          case 209: break;
-          case 105: 
+          case 207: break;
+          case 104: 
             { return CobolTypes.WORKING_STORAGE_SECTION;
             } 
             // fall through
-          case 210: break;
+          case 208: break;
           default:
             zzScanError(ZZ_NO_MATCH);
           }

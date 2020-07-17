@@ -150,6 +150,7 @@ IDENTIFIER = ([:jletterdigit:])+ (- | [:jletterdigit:])* ([:jletterdigit:])+
 
     "not"                     {return CobolTypes.NOT;}
     "equal"                   {return CobolTypes.EQUAL;}
+    "equals"                  {return CobolTypes.EQUALS;}
     "greater"                 {return CobolTypes.GREATER;}
     "less"                    {return CobolTypes.LESS;}
     "than"                    {return CobolTypes.THAN;}

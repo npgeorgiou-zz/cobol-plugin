@@ -43,7 +43,7 @@ public class CobolNonSymbolConditions extends CobolInspectionBase {
                     return;
                 }
 
-                if (element.getNode().findChildByType(CobolTypes.EQUAL) != null) {
+                if (element.getNode().findChildByType(CobolTypes.EQUAL) != null || element.getNode().findChildByType(CobolTypes.EQUALS) != null) {
                     LocalQuickFix[] fixes = new LocalQuickFix[]{new EqualToSymbolsFix(element)};
                     suggestChange(element, holder, fixes);
                     return;

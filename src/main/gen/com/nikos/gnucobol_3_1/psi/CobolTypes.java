@@ -88,6 +88,7 @@ public interface CobolTypes {
   IElementType END_IF = new CobolTokenType("end-if");
   IElementType ENVIRONMENT_DIVISION = new CobolTokenType("ENVIRONMENT_DIVISION");
   IElementType EQUAL = new CobolTokenType("equal");
+  IElementType EQUALS = new CobolTokenType("equals");
   IElementType EQUALS_OP = new CobolTokenType("EQUALS_OP");
   IElementType FLOAT = new CobolTokenType("FLOAT");
   IElementType FROM = new CobolTokenType("FROM");
